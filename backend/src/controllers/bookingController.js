@@ -5,7 +5,7 @@ import RoomType from '../models/RoomType.js';
 import Guest from '../models/Guest.js';
 import Payment from '../models/Payment.js';
 import TaxSetting from '../models/TaxSetting.js';
-import { io } from '../server.js';
+import { getIO } from '../socket.js';
 
 export const createBooking = async (req, res) => {
   const { 
@@ -219,6 +219,7 @@ export const createBooking = async (req, res) => {
       .populate('guest')
       .populate({ path: 'room', populate: { path: 'roomType' } });
 
+    const io = getIO();
     if (io) {
       io.emit('booking_created', populatedBooking);
       io.emit('room_status_changed', { roomId: room._id, status: 'Reserved' });
@@ -377,6 +378,7 @@ export const updateBookingStatus = async (req, res) => {
       .populate('guest')
       .populate({ path: 'room', populate: { path: 'roomType' } });
 
+    const io = getIO();
     if (io) {
       io.emit('booking_updated', updated);
       if (room) io.emit('room_status_changed', { roomId: room._id, status: room.status, cleaningStatus: room.cleaningStatus });

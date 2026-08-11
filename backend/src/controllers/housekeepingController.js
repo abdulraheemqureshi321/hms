@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Room from '../models/Room.js';
 import { HousekeepingLog } from '../models/HousekeepingLog.js';
-import { io } from '../server.js';
+import { getIO } from '../socket.js';
 
 export const getHousekeepingTasks = async (req, res) => {
   try {
@@ -59,6 +59,7 @@ export const updateCleaningStatus = async (req, res) => {
       .populate('room')
       .populate('staff', 'name email role');
 
+    const io = getIO();
     if (io) {
       io.emit('room_cleaning_updated', { roomId, cleaningStatus, log: populatedLog });
     }
