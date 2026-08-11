@@ -24,18 +24,27 @@ app.use(cors({
 
 app.use(express.json());
 
-// Serverless DB connection middleware
+// Public Health Check Endpoints (always respond instantly)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'HMS Backend operational on Vercel Serverless' });
+});
+
+app.get('/', (req, res) => {
+  res.json({ status: 'OK', message: 'HMS Express Server running on Vercel Serverless' });
+});
+
+// Serverless DB Connection Middleware for API data routes
 app.use(async (req, res, next) => {
   try {
     await connectDB();
     next();
   } catch (err) {
     console.error('Serverless DB connection error:', err);
-    res.status(500).json({ error: 'Database connection failed' });
+    res.status(500).json({ error: 'Database connection error' });
   }
 });
 
-// API Routes
+// API Data Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -44,14 +53,5 @@ app.use('/api/billing', billingRoutes);
 app.use('/api/housekeeping', housekeepingRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/settings', settingRoutes);
-
-// Health checks
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'HMS Backend operational on Vercel Serverless' });
-});
-
-app.get('/', (req, res) => {
-  res.json({ status: 'OK', message: 'HMS Express Server running on Vercel Serverless' });
-});
 
 export default app;

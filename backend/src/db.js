@@ -59,12 +59,12 @@ export const connectDB = async () => {
   const targetUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hms_db';
 
   try {
-    // Attempt connection to MongoDB Atlas or Local MongoDB
-    await mongoose.connect(targetUri, { serverSelectionTimeoutMS: 10000 });
+    // Attempt connection with a fast 4s timeout for serverless responsiveness
+    await mongoose.connect(targetUri, { serverSelectionTimeoutMS: 4000 });
     console.log(`✅ Connected to MongoDB Database`);
     await autoSeedIfEmpty();
   } catch (err) {
-    console.log('⚠️ Primary MongoDB connection failed:', err.message);
+    console.log('⚠️ MongoDB connection error:', err.message);
     
     // Only attempt embedded fallback in local development
     if (!process.env.VERCEL) {
@@ -81,9 +81,6 @@ export const connectDB = async () => {
       } catch (memErr) {
         console.log('Embedded Mongo fallback failed:', memErr.message);
       }
-    } else {
-      // Rethrow so Vercel logs the database connection failure
-      throw err;
     }
   }
 };
