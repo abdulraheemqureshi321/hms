@@ -24,8 +24,16 @@ app.use(cors({
 
 app.use(express.json());
 
-// Connect to MongoDB Atlas
-connectDB().catch(err => console.error('MongoDB Serverless connection error:', err));
+// Serverless DB connection middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Serverless DB connection error:', err);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -37,8 +45,13 @@ app.use('/api/housekeeping', housekeepingRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/settings', settingRoutes);
 
+// Health checks
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'HMS Backend operational on Vercel Serverless' });
+});
+
+app.get('/', (req, res) => {
+  res.json({ status: 'OK', message: 'HMS Express Server running on Vercel Serverless' });
 });
 
 export default app;
