@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import { MongoMemoryReplSet } from 'mongodb-memory-server';
+
+try {
+  dns.setDefaultResultOrder('ipv4first');
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  // Ignore fallback if custom DNS setting fails
+}
 
 import User from './models/User.js';
 import RoomType from './models/RoomType.js';
@@ -47,12 +55,12 @@ export const connectDB = async () => {
   const targetUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hms_db';
 
   try {
-    // Quick local MongoDB check
-    await mongoose.connect(targetUri, { serverSelectionTimeoutMS: 1500 });
-    console.log(`✅ Connected to local MongoDB Database (${targetUri})`);
+    // Attempt MongoDB connection (Atlas Cloud or Local)
+    await mongoose.connect(targetUri, { serverSelectionTimeoutMS: 5000 });
+    console.log(`✅ Connected to MongoDB Database (${targetUri})`);
     await autoSeedIfEmpty();
   } catch (err) {
-    console.log('⚠️ Local MongoDB server not active. Spawning embedded MongoDB Replica Set in background...');
+    console.log('⚠️ Primary MongoDB connection failed. Spawning embedded MongoDB Replica Set in background...');
     
     // Non-blocking background spawn so server starts instantly!
     MongoMemoryReplSet.create({
