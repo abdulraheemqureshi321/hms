@@ -9,14 +9,12 @@ import Booking from './models/Booking.js';
 import Payment from './models/Payment.js';
 import { mockData } from './mockDb.js';
 
-// Only adjust local DNS when not on Vercel
-if (!process.env.VERCEL) {
-  try {
-    dns.setDefaultResultOrder('ipv4first');
-    dns.setServers(['8.8.8.8', '1.1.1.1']);
-  } catch (e) {
-    // Ignore fallback if custom DNS setting fails
-  }
+// Configure DNS resolution for MongoDB Atlas SRV lookup compatibility
+try {
+  dns.setDefaultResultOrder('ipv4first');
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  // Ignore if custom DNS server override is restricted
 }
 
 const autoSeedIfEmpty = async () => {
@@ -68,7 +66,7 @@ export const connectDB = async () => {
   } catch (err) {
     console.log('⚠️ Primary MongoDB connection failed:', err.message);
     
-    // Only attempt embedded fallback in local environment
+    // Only attempt embedded fallback in local development
     if (!process.env.VERCEL) {
       try {
         const { MongoMemoryReplSet } = await import('mongodb-memory-server');
@@ -83,6 +81,9 @@ export const connectDB = async () => {
       } catch (memErr) {
         console.log('Embedded Mongo fallback failed:', memErr.message);
       }
+    } else {
+      // Rethrow so Vercel logs the database connection failure
+      throw err;
     }
   }
 };
