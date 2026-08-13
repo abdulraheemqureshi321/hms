@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { api } from './services/api';
+import { socket } from './services/socket';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import LoginPage from './pages/LoginPage';
@@ -73,6 +75,39 @@ function AppLayout() {
 
   const isLoginPage = location.pathname === '/login';
   const showSidebar = !isLoginPage && (!!user || location.pathname.startsWith('/admin'));
+
+  // Global Real-time Socket & Background Pre-fetching Strategy
+  useEffect(() => {
+    if (user && user.role !== 'Guest') {
+      // Pre-fetch admin datasets in background for instant 0ms tab switching
+      Promise.all([
+        api.get('/bookings').catch(() => {}),
+        api.get('/rooms').catch(() => {}),
+        api.get('/billing/invoices').catch(() => {}),
+        api.get('/guests').catch(() => {}),
+        api.get('/housekeeping/tasks').catch(() => {}),
+        api.get('/reports/dashboard').catch(() => {})
+      ]);
+    }
+
+    function onRealtimeUpdate() {
+      api.invalidateCache();
+    }
+
+    socket.on('booking_created', onRealtimeUpdate);
+    socket.on('booking_updated', onRealtimeUpdate);
+    socket.on('payment_updated', onRealtimeUpdate);
+    socket.on('room_status_changed', onRealtimeUpdate);
+    socket.on('room_cleaning_updated', onRealtimeUpdate);
+
+    return () => {
+      socket.off('booking_created', onRealtimeUpdate);
+      socket.off('booking_updated', onRealtimeUpdate);
+      socket.off('payment_updated', onRealtimeUpdate);
+      socket.off('room_status_changed', onRealtimeUpdate);
+      socket.off('room_cleaning_updated', onRealtimeUpdate);
+    };
+  }, [user]);
 
   const routes = (
     <Routes>

@@ -17,15 +17,17 @@ try {
   // Ignore if custom DNS server override is restricted
 }
 
+let isSeeded = false;
+
 const autoSeedIfEmpty = async () => {
+  if (isSeeded) return;
   try {
-    const roomCount = await Room.countDocuments();
-    if (roomCount === 0) {
+    const roomExists = await Room.exists({});
+    if (!roomExists) {
       console.log('🌱 Populating database with default seed data...');
       await RoomType.insertMany(mockData.roomTypes);
       await Room.insertMany(mockData.rooms);
       
-      // Seed users individually so pre('save') bcrypt hook runs properly
       for (const u of mockData.users) {
         const existing = await User.findOne({ email: u.email });
         if (!existing) {
@@ -38,7 +40,6 @@ const autoSeedIfEmpty = async () => {
       await Payment.insertMany(mockData.payments);
       console.log('✅ Database auto-seeded successfully!');
     } else {
-      // Ensure default users exist
       for (const u of mockData.users) {
         const existing = await User.findOne({ email: u.email });
         if (!existing) {
@@ -46,6 +47,7 @@ const autoSeedIfEmpty = async () => {
         }
       }
     }
+    isSeeded = true;
   } catch (err) {
     console.warn('Auto-seed note:', err.message);
   }
@@ -59,14 +61,12 @@ export const connectDB = async () => {
   const targetUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hms_db';
 
   try {
-    // Attempt connection with a fast 4s timeout for serverless responsiveness
     await mongoose.connect(targetUri, { serverSelectionTimeoutMS: 4000 });
     console.log(`✅ Connected to MongoDB Database`);
     await autoSeedIfEmpty();
   } catch (err) {
     console.log('⚠️ MongoDB connection error:', err.message);
     
-    // Only attempt embedded fallback in local development
     if (!process.env.VERCEL) {
       try {
         const { MongoMemoryReplSet } = await import('mongodb-memory-server');

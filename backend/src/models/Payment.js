@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-  booking: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true },
+  booking: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true, index: true },
   amount: { type: Number, required: true },
   taxAmount: { type: Number, default: 0 },
   discountAmount: { type: Number, default: 0 },
@@ -13,9 +13,12 @@ const paymentSchema = new mongoose.Schema({
   paymentStatus: { 
     type: String, 
     enum: ['Paid', 'Pending', 'Refunded'], 
-    default: 'Pending' 
+    default: 'Pending',
+    index: true 
   },
   transactionId: { type: String, default: '' }
 }, { timestamps: true });
+
+paymentSchema.index({ createdAt: -1 });
 
 export default mongoose.model('Payment', paymentSchema);

@@ -1,5 +1,6 @@
 import Payment from '../models/Payment.js';
 import Booking from '../models/Booking.js';
+import { getIO } from '../socket.js';
 
 export const getInvoices = async (req, res) => {
   try {
@@ -13,17 +14,6 @@ export const getInvoices = async (req, res) => {
         ]
       })
       .sort({ createdAt: -1 });
-
-    // Auto-sync payment status to 'Paid' for checked-out bookings
-    for (let inv of invoices) {
-      if (inv.booking && inv.booking.status === 'Checked-Out' && inv.paymentStatus === 'Pending') {
-        inv.paymentStatus = 'Paid';
-        if (!inv.transactionId) {
-          inv.transactionId = 'TXN-' + Date.now();
-        }
-        await inv.save();
-      }
-    }
 
     return res.json(invoices);
   } catch (error) {
@@ -75,7 +65,22 @@ export const processPayment = async (req, res) => {
     }
 
     await payment.save();
-    return res.json(payment);
+
+    const updatedPayment = await Payment.findById(payment._id).populate({
+      path: 'booking',
+      populate: [
+        { path: 'guest' },
+        { path: 'room' },
+        { path: 'roomType' }
+      ]
+    });
+
+    const io = getIO();
+    if (io) {
+      io.emit('payment_updated', updatedPayment);
+    }
+
+    return res.json(updatedPayment);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

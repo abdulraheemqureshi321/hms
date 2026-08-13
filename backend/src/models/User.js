@@ -15,18 +15,21 @@ const permissionSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
   password: { type: String, required: true },
   role: { 
     type: String, 
     enum: ['Admin', 'Manager', 'Receptionist', 'Housekeeping', 'Guest'], 
-    default: 'Guest' 
+    default: 'Guest',
+    index: true 
   },
   created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   shift: { type: String, enum: ['Morning', 'Evening', 'Night', 'Flexible'], default: 'Morning' },
   permissions: [permissionSchema],
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true, index: true }
 }, { timestamps: true });
+
+userSchema.index({ createdAt: -1 });
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
