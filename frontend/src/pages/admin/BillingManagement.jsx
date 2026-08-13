@@ -27,6 +27,8 @@ export default function BillingManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [methodFilter, setMethodFilter] = useState('All');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const filteredInvoices = invoices.filter(inv => {
     const query = searchQuery.toLowerCase();
@@ -40,7 +42,19 @@ export default function BillingManagement() {
     const matchesStatus = statusFilter === 'All' || inv.paymentStatus === statusFilter;
     const matchesMethod = methodFilter === 'All' || inv.paymentMethod === methodFilter;
 
-    return matchesSearch && matchesStatus && matchesMethod;
+    let matchesDate = true;
+    if (startDate && inv.createdAt) {
+      const invTime = new Date(inv.createdAt).setHours(0,0,0,0);
+      const startTime = new Date(startDate).setHours(0,0,0,0);
+      if (invTime < startTime) matchesDate = false;
+    }
+    if (endDate && inv.createdAt) {
+      const invTime = new Date(inv.createdAt).setHours(0,0,0,0);
+      const endTime = new Date(endDate).setHours(23,59,59,999);
+      if (invTime > endTime) matchesDate = false;
+    }
+
+    return matchesSearch && matchesStatus && matchesMethod && matchesDate;
   });
 
   const handleExportExcel = () => {
@@ -203,6 +217,43 @@ export default function BillingManagement() {
             <option value="online">Online Transfer</option>
             <option value="pay_at_hotel">Pay at Hotel</option>
           </select>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>From:</span>
+            <input
+              type="date"
+              className="input-field"
+              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>To:</span>
+            <input
+              type="date"
+              className="input-field"
+              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+
+          {(searchQuery || statusFilter !== 'All' || methodFilter !== 'All' || startDate || endDate) && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setStatusFilter('All');
+                setMethodFilter('All');
+                setStartDate('');
+                setEndDate('');
+              }}
+              style={{ fontSize: '0.8rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: '0 6px' }}
+            >
+              Reset Filters
+            </button>
+          )}
         </div>
 
         <button

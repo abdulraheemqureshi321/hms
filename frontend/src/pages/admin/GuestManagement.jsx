@@ -8,6 +8,8 @@ export default function GuestManagement() {
   const [search, setSearch] = useState('');
   const [idTypeFilter, setIdTypeFilter] = useState('All');
   const [accountTypeFilter, setAccountTypeFilter] = useState('All');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const [historyModal, setHistoryModal] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState(null);
@@ -39,7 +41,19 @@ export default function GuestManagement() {
       (accountTypeFilter === 'Portal Account' && !!g.user) ||
       (accountTypeFilter === 'Front-Desk Record' && !g.user);
 
-    return matchesSearch && matchesIdType && matchesAccountType;
+    let matchesDate = true;
+    if (startDate && g.createdAt) {
+      const gTime = new Date(g.createdAt).setHours(0,0,0,0);
+      const startTime = new Date(startDate).setHours(0,0,0,0);
+      if (gTime < startTime) matchesDate = false;
+    }
+    if (endDate && g.createdAt) {
+      const gTime = new Date(g.createdAt).setHours(0,0,0,0);
+      const endTime = new Date(endDate).setHours(23,59,59,999);
+      if (gTime > endTime) matchesDate = false;
+    }
+
+    return matchesSearch && matchesIdType && matchesAccountType && matchesDate;
   });
 
   const handleExportExcel = () => {
@@ -120,6 +134,43 @@ export default function GuestManagement() {
             <option value="Portal Account">Registered Portal Account</option>
             <option value="Front-Desk Record">Front-Desk Record Only</option>
           </select>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>From:</span>
+            <input
+              type="date"
+              className="input-field"
+              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>To:</span>
+            <input
+              type="date"
+              className="input-field"
+              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+
+          {(search || idTypeFilter !== 'All' || accountTypeFilter !== 'All' || startDate || endDate) && (
+            <button
+              onClick={() => {
+                setSearch('');
+                setIdTypeFilter('All');
+                setAccountTypeFilter('All');
+                setStartDate('');
+                setEndDate('');
+              }}
+              style={{ fontSize: '0.8rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: '0 6px' }}
+            >
+              Reset Filters
+            </button>
+          )}
         </div>
 
         <button
