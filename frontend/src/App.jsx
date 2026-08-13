@@ -15,19 +15,6 @@ import HousekeepingPage from './pages/admin/HousekeepingPage';
 import ReportsPage from './pages/admin/ReportsPage';
 import StaffManagement from './pages/admin/StaffManagement';
 
-// Smart Root Router: Directs all visitors to Staff Login or Staff Dashboard
-function RootRouter() {
-  const { user, loading } = useAuth();
-  if (loading) {
-    return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading HMS...</div>;
-  }
-  if (user) {
-    if (user.role === 'Guest') return <Navigate to="/guest-dashboard" replace />;
-    return <Navigate to="/admin" replace />;
-  }
-  return <Navigate to="/login" replace />;
-}
-
 // Protected Route Wrapper with Permission Validation
 function ProtectedRoute({ children, module, action = 'view' }) {
   const { user, loading, hasPermission } = useAuth();
@@ -86,10 +73,9 @@ function AppLayout() {
 
   const routes = (
     <Routes>
-      {/* Root path defaults directly to Staff Login / Admin Dashboard */}
-      <Route path="/" element={<RootRouter />} />
+      {/* Online Guest Portal Routes */}
+      <Route path="/" element={<PortalHome />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/public-site" element={<PortalHome />} />
       <Route path="/guest-dashboard" element={<GuestDashboard />} />
 
       {/* Admin & Staff Panel Protected Routes */}
