@@ -159,17 +159,17 @@ export default function RoomManagement() {
   const { hasPermission } = useAuth();
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             Room & <span className="text-gradient">Inventory Control</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             Manage room categories, edit pricing, upload room photos, and set operational status
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
           {hasPermission('rooms', 'create') && (
             <button className="btn btn-secondary" onClick={() => openTypeModal(null)}>
               <Plus size={16} /> Add Room Category
@@ -184,8 +184,8 @@ export default function RoomManagement() {
       </div>
 
       {/* Room Types Overview & Category Price Management */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <h2 style={{ fontSize: '1.2rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+        <h2 style={{ fontSize: '1.15rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BedDouble size={18} color="var(--accent-primary)" /> Room Categories & Pricing Rates
         </h2>
         <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
@@ -193,9 +193,9 @@ export default function RoomManagement() {
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+      <div className="grid-cols-3" style={{ marginBottom: '40px' }}>
         {roomTypes.map(t => (
-          <div key={t._id} className="glass-panel" style={{ padding: '24px', position: 'relative', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+          <div key={t._id} className="glass-panel" style={{ padding: '20px', position: 'relative', background: '#ffffff', border: '1px solid #e2e8f0' }}>
             {t.photos && t.photos.length > 0 && (
               <div style={{ width: '100%', height: '140px', borderRadius: '8px', overflow: 'hidden', marginBottom: '16px', background: '#f1f5f9' }}>
                 <img src={t.photos[0]} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -203,13 +203,13 @@ export default function RoomManagement() {
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: '#0f172a' }}>{t.name}</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#0f172a' }}>{t.name}</h3>
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Users size={14} /> Capacity: {t.capacity} Person(s)
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '1.35rem', fontWeight: '800', color: 'var(--accent-primary)' }}>
+                <div style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--accent-primary)' }}>
                   PKR {t.basePrice}<span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/night</span>
                 </div>
               </div>
@@ -242,79 +242,81 @@ export default function RoomManagement() {
       </div>
 
       {/* Rooms Directory */}
-      <h2 style={{ fontSize: '1.2rem', marginBottom: '16px', color: '#0f172a' }}>Individual Rooms Directory</h2>
-      <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-              <th style={{ padding: '12px' }}>ROOM NO.</th>
-              <th style={{ padding: '12px' }}>CATEGORY</th>
-              <th style={{ padding: '12px' }}>FLOOR</th>
-              <th style={{ padding: '12px' }}>OPERATIONAL STATUS</th>
-              <th style={{ padding: '12px' }}>CLEANING STATE</th>
-              <th style={{ padding: '12px' }}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rooms.map(room => (
-              <tr key={room._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                <td style={{ padding: '16px 12px', fontWeight: '800', fontSize: '1.1rem', color: '#0f172a' }}>
-                  Room {room.roomNumber}
-                </td>
-                <td style={{ padding: '16px 12px', color: '#334155' }}>{room.roomType?.name || 'Standard'}</td>
-                <td style={{ padding: '16px 12px', color: '#334155' }}>Floor {room.floor}</td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    background: room.status === 'Available' ? 'rgba(5, 150, 105, 0.1)' : room.status === 'Occupied' ? 'rgba(225, 29, 72, 0.1)' : room.status === 'Reserved' ? 'rgba(147, 51, 234, 0.1)' : 'rgba(217, 119, 6, 0.1)',
-                    color: room.status === 'Available' ? '#059669' : room.status === 'Occupied' ? '#e11d48' : room.status === 'Reserved' ? '#9333ea' : '#d97706'
-                  }}>
-                    {room.status}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    background: room.cleaningStatus === 'Clean' ? 'rgba(5, 150, 105, 0.1)' : 'rgba(225, 29, 72, 0.1)',
-                    color: room.cleaningStatus === 'Clean' ? '#059669' : '#e11d48'
-                  }}>
-                    {room.cleaningStatus}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  {hasPermission('rooms', 'edit') ? (
-                    <select
-                      value={room.status}
-                      onChange={(e) => handleStatusChange(room._id, e.target.value)}
-                      style={{ padding: '6px 10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', fontSize: '0.8rem' }}
-                    >
-                      <option value="Available">Available</option>
-                      <option value="Occupied">Occupied</option>
-                      <option value="Reserved">Reserved</option>
-                      <option value="Under Maintenance">Under Maintenance</option>
-                    </select>
-                  ) : (
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Read Only</span>
-                  )}
-                </td>
+      <h2 style={{ fontSize: '1.15rem', marginBottom: '16px', color: '#0f172a' }}>Individual Rooms Directory</h2>
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="table-responsive">
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
+                <th style={{ padding: '12px' }}>ROOM NO.</th>
+                <th style={{ padding: '12px' }}>CATEGORY</th>
+                <th style={{ padding: '12px' }}>FLOOR</th>
+                <th style={{ padding: '12px' }}>OPERATIONAL STATUS</th>
+                <th style={{ padding: '12px' }}>CLEANING STATE</th>
+                <th style={{ padding: '12px' }}>ACTIONS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rooms.map(room => (
+                <tr key={room._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                  <td style={{ padding: '14px 12px', fontWeight: '800', fontSize: '1.05rem', color: '#0f172a' }}>
+                    Room {room.roomNumber}
+                  </td>
+                  <td style={{ padding: '14px 12px', color: '#334155' }}>{room.roomType?.name || 'Standard'}</td>
+                  <td style={{ padding: '14px 12px', color: '#334155' }}>Floor {room.floor}</td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      background: room.status === 'Available' ? 'rgba(5, 150, 105, 0.1)' : room.status === 'Occupied' ? 'rgba(225, 29, 72, 0.1)' : room.status === 'Reserved' ? 'rgba(147, 51, 234, 0.1)' : 'rgba(217, 119, 6, 0.1)',
+                      color: room.status === 'Available' ? '#059669' : room.status === 'Occupied' ? '#e11d48' : room.status === 'Reserved' ? '#9333ea' : '#d97706'
+                    }}>
+                      {room.status}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      background: room.cleaningStatus === 'Clean' ? 'rgba(5, 150, 105, 0.1)' : 'rgba(225, 29, 72, 0.1)',
+                      color: room.cleaningStatus === 'Clean' ? '#059669' : '#e11d48'
+                    }}>
+                      {room.cleaningStatus}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    {hasPermission('rooms', 'edit') ? (
+                      <select
+                        value={room.status}
+                        onChange={(e) => handleStatusChange(room._id, e.target.value)}
+                        style={{ padding: '6px 10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', fontSize: '0.8rem' }}
+                      >
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Reserved">Reserved</option>
+                        <option value="Under Maintenance">Under Maintenance</option>
+                      </select>
+                    ) : (
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Read Only</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Modal: Room Category & Pricing Manager */}
       {showTypeModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '550px', padding: '32px', maxHeight: '90vh', overflowY: 'auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '550px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '1.4rem', color: '#0f172a' }}>{editingType ? 'Edit Room Category & Pricing' : 'Add New Room Category'}</h2>
+              <h2 style={{ fontSize: '1.3rem', color: '#0f172a' }}>{editingType ? 'Edit Room Category & Pricing' : 'Add New Room Category'}</h2>
               <button onClick={() => setShowTypeModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
             </div>
 
@@ -337,7 +339,7 @@ export default function RoomManagement() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="grid-cols-2">
                 <div>
                   <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600' }}>Base Price (PKR / night)</label>
                   <input
@@ -437,8 +439,8 @@ export default function RoomManagement() {
 
       {/* Modal: Add Room */}
       {showRoomModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '450px' }}>
             <h2 style={{ fontSize: '1.3rem', marginBottom: '16px', color: '#0f172a' }}>Add Room to Inventory</h2>
             <form onSubmit={handleCreateRoom} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>

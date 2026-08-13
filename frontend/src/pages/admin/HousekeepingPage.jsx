@@ -40,23 +40,23 @@ export default function HousekeepingPage() {
   const { hasPermission } = useAuth();
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             Housekeeping <span className="text-gradient">Task Center</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             Real-time room cleanliness tracking and turnover logging
           </p>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+      <div className="grid-cols-3" style={{ marginBottom: '40px' }}>
         {rooms.map(room => (
           <div key={room._id} className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#0f172a' }}>Room {room.roomNumber}</h3>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#0f172a' }}>Room {room.roomNumber}</h3>
               <span style={{
                 padding: '4px 10px',
                 borderRadius: '12px',
@@ -73,27 +73,27 @@ export default function HousekeepingPage() {
             </div>
 
             {hasPermission('housekeeping', 'edit') ? (
-              <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 <button
                   className="btn btn-secondary"
                   onClick={() => handleCleaningChange(room._id, 'Clean')}
-                  style={{ flex: 1, fontSize: '0.75rem', padding: '6px', background: room.cleaningStatus === 'Clean' ? 'rgba(5,150,105,0.15)' : undefined }}
+                  style={{ flex: 1, minWidth: '70px', fontSize: '0.75rem', padding: '6px', background: room.cleaningStatus === 'Clean' ? 'rgba(5,150,105,0.15)' : undefined }}
                 >
-                  Mark Clean
+                  Clean
                 </button>
                 <button
                   className="btn btn-secondary"
                   onClick={() => handleCleaningChange(room._id, 'In Progress')}
-                  style={{ flex: 1, fontSize: '0.75rem', padding: '6px', background: room.cleaningStatus === 'In Progress' ? 'rgba(217,119,6,0.15)' : undefined }}
+                  style={{ flex: 1, minWidth: '70px', fontSize: '0.75rem', padding: '6px', background: room.cleaningStatus === 'In Progress' ? 'rgba(217,119,6,0.15)' : undefined }}
                 >
-                  In Progress
+                  Progress
                 </button>
                 <button
                   className="btn btn-secondary"
                   onClick={() => handleCleaningChange(room._id, 'Dirty')}
-                  style={{ flex: 1, fontSize: '0.75rem', padding: '6px', background: room.cleaningStatus === 'Dirty' ? 'rgba(225,29,72,0.15)' : undefined }}
+                  style={{ flex: 1, minWidth: '70px', fontSize: '0.75rem', padding: '6px', background: room.cleaningStatus === 'Dirty' ? 'rgba(225,29,72,0.15)' : undefined }}
                 >
-                  Mark Dirty
+                  Dirty
                 </button>
               </div>
             ) : (

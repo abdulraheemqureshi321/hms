@@ -97,15 +97,15 @@ export default function BillingManagement() {
   const sampleTotal = sampleBase + sampleTax + sampleService;
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
       
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             Billing & <span className="text-gradient">Invoicing Center</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             Automated tax calculation, payment status tracking, and printable receipts
           </p>
         </div>
@@ -123,10 +123,10 @@ export default function BillingManagement() {
       </div>
 
       {/* Tax Quick Summary Widget */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+      <div className="grid-cols-3" style={{ marginBottom: '32px' }}>
         <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '14px' }}>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>Active Tax System</div>
-          <div style={{ fontSize: '1.4rem', fontWeight: '800', color: taxForm.isTaxEnabled ? 'var(--accent-primary)' : '#64748b', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.3rem', fontWeight: '800', color: taxForm.isTaxEnabled ? 'var(--accent-primary)' : '#64748b', marginTop: '4px' }}>
             {taxForm.isTaxEnabled ? 'ENABLED' : 'DISABLED'}
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>{taxForm.taxName} ({taxForm.taxRate}%)</div>
@@ -134,7 +134,7 @@ export default function BillingManagement() {
 
         <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '14px' }}>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>Service Charge Rate</div>
-          <div style={{ fontSize: '1.4rem', fontWeight: '800', color: '#d97706', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.3rem', fontWeight: '800', color: '#d97706', marginTop: '4px' }}>
             {taxForm.serviceFeeRate}%
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>Luxury & Service Maintenance Fee</div>
@@ -142,7 +142,7 @@ export default function BillingManagement() {
 
         <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '14px' }}>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>Tax Registration (NTN)</div>
-          <div style={{ fontSize: '1.3rem', fontWeight: '800', color: '#0f172a', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0f172a', marginTop: '4px' }}>
             {taxForm.ntnNumber || 'N/A'}
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>FBR Official Hotel NTN</div>
@@ -150,79 +150,81 @@ export default function BillingManagement() {
       </div>
 
       {/* Invoices Table */}
-      <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-              <th style={{ padding: '12px' }}>BOOKING REF</th>
-              <th style={{ padding: '12px' }}>GUEST NAME</th>
-              <th style={{ padding: '12px' }}>METHOD</th>
-              <th style={{ padding: '12px' }}>TAX & FEES</th>
-              <th style={{ padding: '12px' }}>TOTAL AMOUNT</th>
-              <th style={{ padding: '12px' }}>PAYMENT STATUS</th>
-              <th style={{ padding: '12px' }}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.length === 0 ? (
-              <tr>
-                <td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                  No billing invoices found.
-                </td>
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="table-responsive">
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
+                <th style={{ padding: '12px' }}>BOOKING REF</th>
+                <th style={{ padding: '12px' }}>GUEST NAME</th>
+                <th style={{ padding: '12px' }}>METHOD</th>
+                <th style={{ padding: '12px' }}>TAX & FEES</th>
+                <th style={{ padding: '12px' }}>TOTAL AMOUNT</th>
+                <th style={{ padding: '12px' }}>PAYMENT STATUS</th>
+                <th style={{ padding: '12px' }}>ACTIONS</th>
               </tr>
-            ) : (
-              invoices.map(inv => (
-                <tr key={inv._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                  <td style={{ padding: '16px 12px', fontWeight: '700', color: 'var(--accent-primary)' }}>
-                    {inv.booking?.bookingCode}
-                  </td>
-                  <td style={{ padding: '16px 12px', fontWeight: '600', color: '#0f172a' }}>
-                    {inv.booking?.guest?.name}
-                  </td>
-                  <td style={{ padding: '16px 12px', textTransform: 'capitalize', color: '#334155' }}>
-                    {inv.paymentMethod?.replace('_', ' ')}
-                  </td>
-                  <td style={{ padding: '16px 12px', color: 'var(--text-muted)' }}>
-                    PKR {inv.taxAmount}
-                  </td>
-                  <td style={{ padding: '16px 12px', fontWeight: '800', color: '#0f172a' }}>
-                    PKR {inv.amount}
-                  </td>
-                  <td style={{ padding: '16px 12px' }}>
-                    <span style={{
-                      padding: '4px 10px',
-                      borderRadius: '12px',
-                      fontSize: '0.75rem',
-                      fontWeight: '700',
-                      background: inv.paymentStatus === 'Paid' ? 'rgba(5, 150, 105, 0.1)' : 'rgba(217, 119, 6, 0.1)',
-                      color: inv.paymentStatus === 'Paid' ? '#059669' : '#d97706'
-                    }}>
-                      {inv.paymentStatus}
-                    </span>
-                  </td>
-                  <td style={{ padding: '16px 12px' }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      {hasPermission('billing', 'edit') && inv.paymentStatus === 'Pending' && (
-                        <button className="btn btn-secondary" onClick={() => handlePay(inv._id)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                          Mark as Paid
-                        </button>
-                      )}
-                      <button className="btn btn-secondary" onClick={() => setSelectedInvoice(inv)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                        <Printer size={12} /> View Receipt
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {invoices.length === 0 ? (
+                <tr>
+                  <td colSpan="7" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    No billing invoices found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                invoices.map(inv => (
+                  <tr key={inv._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                    <td style={{ padding: '14px 12px', fontWeight: '700', color: 'var(--accent-primary)' }}>
+                      {inv.booking?.bookingCode}
+                    </td>
+                    <td style={{ padding: '14px 12px', fontWeight: '600', color: '#0f172a' }}>
+                      {inv.booking?.guest?.name}
+                    </td>
+                    <td style={{ padding: '14px 12px', textTransform: 'capitalize', color: '#334155' }}>
+                      {inv.paymentMethod?.replace('_', ' ')}
+                    </td>
+                    <td style={{ padding: '14px 12px', color: 'var(--text-muted)' }}>
+                      PKR {inv.taxAmount}
+                    </td>
+                    <td style={{ padding: '14px 12px', fontWeight: '800', color: '#0f172a' }}>
+                      PKR {inv.amount}
+                    </td>
+                    <td style={{ padding: '14px 12px' }}>
+                      <span style={{
+                        padding: '4px 10px',
+                        borderRadius: '12px',
+                        fontSize: '0.75rem',
+                        fontWeight: '700',
+                        background: inv.paymentStatus === 'Paid' ? 'rgba(5, 150, 105, 0.1)' : 'rgba(217, 119, 6, 0.1)',
+                        color: inv.paymentStatus === 'Paid' ? '#059669' : '#d97706'
+                      }}>
+                        {inv.paymentStatus}
+                      </span>
+                    </td>
+                    <td style={{ padding: '14px 12px' }}>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {hasPermission('billing', 'edit') && inv.paymentStatus === 'Pending' && (
+                          <button className="btn btn-secondary" onClick={() => handlePay(inv._id)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
+                            Mark as Paid
+                          </button>
+                        )}
+                        <button className="btn btn-secondary" onClick={() => setSelectedInvoice(inv)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
+                          <Printer size={12} /> Receipt
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Tax & Service Fee Settings Modal */}
       {showTaxModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '20px' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '600px', padding: '32px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', borderRadius: '18px', maxHeight: '90vh', overflowY: 'auto' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '600px' }}>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -230,7 +232,7 @@ export default function BillingManagement() {
                   <Percent size={20} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.3rem', fontWeight: '800', color: '#0f172a' }}>Tax & Service Fee Settings</h2>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0f172a' }}>Tax & Service Fee Settings</h2>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Configure government PST/GST rates and hotel service fees</div>
                 </div>
               </div>
@@ -258,7 +260,7 @@ export default function BillingManagement() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="grid-cols-2">
                 <div>
                   <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600', marginBottom: '6px', display: 'block' }}>Tax Label / Name</label>
                   <input
@@ -286,7 +288,7 @@ export default function BillingManagement() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              <div className="grid-cols-2">
                 <div>
                   <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600', marginBottom: '6px', display: 'block' }}>Service Charge Rate (%)</label>
                   <input
@@ -314,7 +316,7 @@ export default function BillingManagement() {
               </div>
 
               {/* Live Preview Box */}
-              <div style={{ padding: '16px', background: 'rgba(5, 150, 105, 0.05)', borderRadius: '12px', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+              <div style={{ padding: '14px', background: 'rgba(5, 150, 105, 0.05)', borderRadius: '12px', border: '1px solid rgba(5, 150, 105, 0.2)' }}>
                 <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#059669', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Calculator size={16} /> Live Sample Invoice Preview (Room Price PKR 10,000)
                 </div>
@@ -354,17 +356,17 @@ export default function BillingManagement() {
 
       {/* Printable Receipt Modal */}
       {selectedInvoice && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '20px' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '600px', padding: '32px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', borderRadius: '18px', maxHeight: '90vh', overflowY: 'auto' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '600px' }}>
             <div style={{ textAlign: 'center', marginBottom: '20px', borderBottom: '2px solid #0f172a', paddingBottom: '16px' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: '900', color: '#0f172a', letterSpacing: '0.5px' }}>CAREHAVEN LUXURY HOTEL</div>
-              <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Clifton Phase 8, Karachi, Pakistan • Tel: +92 21 111 227 342</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#0f172a', letterSpacing: '0.5px' }}>CAREHAVEN LUXURY HOTEL</div>
+              <div style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: '600' }}>Clifton Phase 8, Karachi, Pakistan • Tel: +92 21 111 227 342</div>
               <div style={{ display: 'inline-block', margin: '8px 0 0 0', padding: '3px 10px', borderRadius: '12px', background: '#f1f5f9', border: '1px solid #cbd5e1', fontSize: '0.75rem', fontWeight: '700', color: '#334155' }}>
                 FBR TAX NTN REGISTRATION: {taxForm.ntnNumber || '7920143-5'}
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '20px', fontSize: '0.85rem', background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div className="grid-cols-2" style={{ marginBottom: '20px', fontSize: '0.85rem', background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
               <div>
                 <div style={{ color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: '700' }}>Guest Details</div>
                 <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.95rem' }}>{selectedInvoice.booking?.guest?.name || 'Walk-In Guest'}</div>
@@ -384,62 +386,64 @@ export default function BillingManagement() {
               <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0f172a', textTransform: 'uppercase', marginBottom: '8px' }}>
                 Complete Summary of Bill
               </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-                <thead>
-                  <tr style={{ background: '#f1f5f9', borderBottom: '1px solid #cbd5e1', textAlign: 'left' }}>
-                    <th style={{ padding: '8px 10px', color: '#334155' }}>Description</th>
-                    <th style={{ padding: '8px 10px', color: '#334155', textAlign: 'right' }}>Rate / Calc</th>
-                    <th style={{ padding: '8px 10px', color: '#334155', textAlign: 'right' }}>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(() => {
-                    const totalPaid = selectedInvoice.amount || 0;
-                    const taxAndFee = selectedInvoice.taxAmount || 0;
-                    const baseCharge = Math.max(0, totalPaid - taxAndFee);
-                    const estimatedTax = Math.round(baseCharge * ((taxForm.taxRate || 16) / 100));
-                    const estimatedService = Math.max(0, taxAndFee - estimatedTax);
+              <div className="table-responsive">
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr style={{ background: '#f1f5f9', borderBottom: '1px solid #cbd5e1', textAlign: 'left' }}>
+                      <th style={{ padding: '8px 10px', color: '#334155' }}>Description</th>
+                      <th style={{ padding: '8px 10px', color: '#334155', textAlign: 'right' }}>Rate / Calc</th>
+                      <th style={{ padding: '8px 10px', color: '#334155', textAlign: 'right' }}>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(() => {
+                      const totalPaid = selectedInvoice.amount || 0;
+                      const taxAndFee = selectedInvoice.taxAmount || 0;
+                      const baseCharge = Math.max(0, totalPaid - taxAndFee);
+                      const estimatedTax = Math.round(baseCharge * ((taxForm.taxRate || 16) / 100));
+                      const estimatedService = Math.max(0, taxAndFee - estimatedTax);
 
-                    return (
-                      <>
-                        <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                          <td style={{ padding: '10px' }}>
-                            <div style={{ fontWeight: '700', color: '#0f172a' }}>Room Stay Charge</div>
-                            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Room {selectedInvoice.booking?.room?.roomNumber || '101'}</div>
-                          </td>
-                          <td style={{ padding: '10px', textAlign: 'right', color: '#64748b' }}>Base Stay</td>
-                          <td style={{ padding: '10px', textAlign: 'right', fontWeight: '700', color: '#0f172a' }}>PKR {baseCharge.toLocaleString()}</td>
-                        </tr>
-                        <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                          <td style={{ padding: '10px' }}>
-                            <div style={{ fontWeight: '600', color: '#334155' }}>{taxForm.taxName || 'GST / Sales Tax'}</div>
-                          </td>
-                          <td style={{ padding: '10px', textAlign: 'right', color: '#64748b' }}>{taxForm.taxRate}% Rate</td>
-                          <td style={{ padding: '10px', textAlign: 'right', color: '#334155' }}>PKR {estimatedTax.toLocaleString()}</td>
-                        </tr>
-                        <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                          <td style={{ padding: '10px' }}>
-                            <div style={{ fontWeight: '600', color: '#334155' }}>Hotel Service Fee</div>
-                          </td>
-                          <td style={{ padding: '10px', textAlign: 'right', color: '#64748b' }}>{taxForm.serviceFeeRate}% Rate</td>
-                          <td style={{ padding: '10px', textAlign: 'right', color: '#334155' }}>PKR {estimatedService.toLocaleString()}</td>
-                        </tr>
-                        <tr style={{ background: '#f8fafc', fontWeight: '800' }}>
-                          <td style={{ padding: '12px 10px', fontSize: '0.95rem', color: '#0f172a' }}>GRAND TOTAL BILL</td>
-                          <td style={{ padding: '12px 10px', textAlign: 'right' }}>
-                            <span style={{ padding: '2px 8px', borderRadius: '10px', fontSize: '0.75rem', background: selectedInvoice.paymentStatus === 'Paid' ? 'rgba(5, 150, 105, 0.1)' : 'rgba(217, 119, 6, 0.1)', color: selectedInvoice.paymentStatus === 'Paid' ? '#059669' : '#d97706' }}>
-                              {selectedInvoice.paymentStatus?.toUpperCase()}
-                            </span>
-                          </td>
-                          <td style={{ padding: '12px 10px', textAlign: 'right', fontSize: '1.1rem', color: '#059669' }}>
-                            PKR {totalPaid.toLocaleString()}
-                          </td>
-                        </tr>
-                      </>
-                    );
-                  })()}
-                </tbody>
-              </table>
+                      return (
+                        <>
+                          <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: '700', color: '#0f172a' }}>Room Stay Charge</div>
+                              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Room {selectedInvoice.booking?.room?.roomNumber || '101'}</div>
+                            </td>
+                            <td style={{ padding: '10px', textAlign: 'right', color: '#64748b' }}>Base Stay</td>
+                            <td style={{ padding: '10px', textAlign: 'right', fontWeight: '700', color: '#0f172a' }}>PKR {baseCharge.toLocaleString()}</td>
+                          </tr>
+                          <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: '600', color: '#334155' }}>{taxForm.taxName || 'GST / Sales Tax'}</div>
+                            </td>
+                            <td style={{ padding: '10px', textAlign: 'right', color: '#64748b' }}>{taxForm.taxRate}% Rate</td>
+                            <td style={{ padding: '10px', textAlign: 'right', color: '#334155' }}>PKR {estimatedTax.toLocaleString()}</td>
+                          </tr>
+                          <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: '600', color: '#334155' }}>Hotel Service Fee</div>
+                            </td>
+                            <td style={{ padding: '10px', textAlign: 'right', color: '#64748b' }}>{taxForm.serviceFeeRate}% Rate</td>
+                            <td style={{ padding: '10px', textAlign: 'right', color: '#334155' }}>PKR {estimatedService.toLocaleString()}</td>
+                          </tr>
+                          <tr style={{ background: '#f8fafc', fontWeight: '800' }}>
+                            <td style={{ padding: '12px 10px', fontSize: '0.95rem', color: '#0f172a' }}>GRAND TOTAL BILL</td>
+                            <td style={{ padding: '12px 10px', textAlign: 'right' }}>
+                              <span style={{ padding: '2px 8px', borderRadius: '10px', fontSize: '0.75rem', background: selectedInvoice.paymentStatus === 'Paid' ? 'rgba(5, 150, 105, 0.1)' : 'rgba(217, 119, 6, 0.1)', color: selectedInvoice.paymentStatus === 'Paid' ? '#059669' : '#d97706' }}>
+                                {selectedInvoice.paymentStatus?.toUpperCase()}
+                              </span>
+                            </td>
+                            <td style={{ padding: '12px 10px', textAlign: 'right', fontSize: '1.1rem', color: '#059669' }}>
+                              PKR {totalPaid.toLocaleString()}
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    })()}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>

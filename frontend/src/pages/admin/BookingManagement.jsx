@@ -180,13 +180,13 @@ export default function BookingManagement() {
   const { hasPermission } = useAuth();
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             Unified <span className="text-gradient">Booking & Reservation Manager</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             Real-time reservations sync across online portal, walk-ins, guest ID uploads, and multi-guest details
           </p>
         </div>
@@ -198,116 +198,118 @@ export default function BookingManagement() {
       </div>
 
       {/* Bookings List */}
-      <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-              <th style={{ padding: '12px' }}>BOOKING CODE</th>
-              <th style={{ padding: '12px' }}>PRIMARY GUEST & ID</th>
-              <th style={{ padding: '12px' }}>GUESTS STAYING</th>
-              <th style={{ padding: '12px' }}>ROOM ASSIGNED</th>
-              <th style={{ padding: '12px' }}>DATES</th>
-              <th style={{ padding: '12px' }}>TOTAL PRICE</th>
-              <th style={{ padding: '12px' }}>STATUS</th>
-              <th style={{ padding: '12px' }}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map(b => (
-              <tr key={b._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                <td style={{ padding: '16px 12px', fontWeight: '700', color: 'var(--accent-primary)' }}>
-                  {b.bookingCode}
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <div style={{ fontWeight: '700', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {b.guest?.name || 'Walk-in Guest'}
-                    {b.guest?.idCardImage && (
-                      <span title="ID Card Uploaded" style={{ color: '#059669', fontSize: '0.75rem', background: 'rgba(5, 150, 105, 0.1)', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>
-                        ✓ ID Uploaded
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{b.guest?.email}</div>
-                  {b.guest?.idNumber && (
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      {b.guest.idType || 'ID'}: {b.guest.idNumber}
-                    </div>
-                  )}
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '700', color: '#0f172a' }}>
-                    <Users size={14} color="var(--accent-primary)" />
-                    {b.guestsCount || 1} Person(s)
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{ fontWeight: '700', color: '#0f172a' }}>Room {b.room?.roomNumber}</span>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{b.room?.roomType?.name}</div>
-                </td>
-                <td style={{ padding: '16px 12px', fontSize: '0.82rem', color: '#334155' }}>
-                  <div>In: {new Date(b.checkInDate).toLocaleDateString()}</div>
-                  <div>Out: {new Date(b.checkOutDate).toLocaleDateString()}</div>
-                </td>
-                <td style={{ padding: '16px 12px', fontWeight: '800', color: '#0f172a' }}>
-                  PKR {b.totalAmount}
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    background: b.status === 'Confirmed' ? 'rgba(5, 150, 105, 0.1)' : b.status === 'Pending' ? 'rgba(217, 119, 6, 0.15)' : b.status === 'Checked-In' ? 'rgba(59, 130, 246, 0.1)' : b.status === 'Checked-Out' ? 'rgba(100, 116, 139, 0.1)' : 'rgba(225, 29, 72, 0.1)',
-                    color: b.status === 'Confirmed' ? '#059669' : b.status === 'Pending' ? '#d97706' : b.status === 'Checked-In' ? '#2563eb' : b.status === 'Checked-Out' ? '#64748b' : '#e11d48',
-                    border: b.status === 'Pending' ? '1px solid #fde68a' : 'none'
-                  }}>
-                    {b.status === 'Pending' ? 'Pending Approval' : b.status}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button className="btn btn-secondary" onClick={() => setViewBooking(b)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                      <Eye size={12} /> Details
-                    </button>
-                    {hasPermission('bookings', 'edit') && b.status === 'Pending' && (
-                      <button 
-                        className="btn btn-primary" 
-                        onClick={() => handleStatusUpdate(b._id, 'Confirmed')} 
-                        style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#059669', borderColor: '#059669', color: '#ffffff', fontWeight: '700' }}
-                        title="Approve and confirm guest reservation"
-                      >
-                        <CheckCircle size={12} /> Approve & Confirm
-                      </button>
-                    )}
-                    {hasPermission('bookings', 'edit') && b.status === 'Confirmed' && (
-                      <button className="btn btn-secondary" onClick={() => handleStatusUpdate(b._id, 'Checked-In')} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                        Check In
-                      </button>
-                    )}
-                    {hasPermission('bookings', 'edit') && b.status === 'Checked-In' && (
-                      <button className="btn btn-secondary" onClick={() => handleStatusUpdate(b._id, 'Checked-Out')} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                        Check Out
-                      </button>
-                    )}
-                    {(hasPermission('bookings', 'delete') || hasPermission('bookings', 'edit')) && b.status !== 'Cancelled' && b.status !== 'Checked-Out' && (
-                      <button className="btn btn-secondary" onClick={() => openCancelDialog(b)} style={{ fontSize: '0.75rem', padding: '4px 8px', color: '#dc2626' }}>
-                        {b.status === 'Pending' ? 'Decline' : 'Cancel'}
-                      </button>
-                    )}
-                  </div>
-                </td>
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="table-responsive">
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
+                <th style={{ padding: '12px' }}>BOOKING CODE</th>
+                <th style={{ padding: '12px' }}>PRIMARY GUEST & ID</th>
+                <th style={{ padding: '12px' }}>GUESTS STAYING</th>
+                <th style={{ padding: '12px' }}>ROOM ASSIGNED</th>
+                <th style={{ padding: '12px' }}>DATES</th>
+                <th style={{ padding: '12px' }}>TOTAL PRICE</th>
+                <th style={{ padding: '12px' }}>STATUS</th>
+                <th style={{ padding: '12px' }}>ACTIONS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {bookings.map(b => (
+                <tr key={b._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                  <td style={{ padding: '14px 12px', fontWeight: '700', color: 'var(--accent-primary)' }}>
+                    {b.bookingCode}
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <div style={{ fontWeight: '700', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      {b.guest?.name || 'Walk-in Guest'}
+                      {b.guest?.idCardImage && (
+                        <span title="ID Card Uploaded" style={{ color: '#059669', fontSize: '0.75rem', background: 'rgba(5, 150, 105, 0.1)', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>
+                          ✓ ID Uploaded
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{b.guest?.email}</div>
+                    {b.guest?.idNumber && (
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                        {b.guest.idType || 'ID'}: {b.guest.idNumber}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '700', color: '#0f172a' }}>
+                      <Users size={14} color="var(--accent-primary)" />
+                      {b.guestsCount || 1} Person(s)
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{ fontWeight: '700', color: '#0f172a' }}>Room {b.room?.roomNumber}</span>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{b.room?.roomType?.name}</div>
+                  </td>
+                  <td style={{ padding: '14px 12px', fontSize: '0.82rem', color: '#334155' }}>
+                    <div>In: {new Date(b.checkInDate).toLocaleDateString()}</div>
+                    <div>Out: {new Date(b.checkOutDate).toLocaleDateString()}</div>
+                  </td>
+                  <td style={{ padding: '14px 12px', fontWeight: '800', color: '#0f172a' }}>
+                    PKR {b.totalAmount}
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      background: b.status === 'Confirmed' ? 'rgba(5, 150, 105, 0.1)' : b.status === 'Pending' ? 'rgba(217, 119, 6, 0.15)' : b.status === 'Checked-In' ? 'rgba(59, 130, 246, 0.1)' : b.status === 'Checked-Out' ? 'rgba(100, 116, 139, 0.1)' : 'rgba(225, 29, 72, 0.1)',
+                      color: b.status === 'Confirmed' ? '#059669' : b.status === 'Pending' ? '#d97706' : b.status === 'Checked-In' ? '#2563eb' : b.status === 'Checked-Out' ? '#64748b' : '#e11d48',
+                      border: b.status === 'Pending' ? '1px solid #fde68a' : 'none'
+                    }}>
+                      {b.status === 'Pending' ? 'Pending Approval' : b.status}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      <button className="btn btn-secondary" onClick={() => setViewBooking(b)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
+                        <Eye size={12} /> Details
+                      </button>
+                      {hasPermission('bookings', 'edit') && b.status === 'Pending' && (
+                        <button 
+                          className="btn btn-primary" 
+                          onClick={() => handleStatusUpdate(b._id, 'Confirmed')} 
+                          style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#059669', borderColor: '#059669', color: '#ffffff', fontWeight: '700' }}
+                          title="Approve and confirm guest reservation"
+                        >
+                          <CheckCircle size={12} /> Confirm
+                        </button>
+                      )}
+                      {hasPermission('bookings', 'edit') && b.status === 'Confirmed' && (
+                        <button className="btn btn-secondary" onClick={() => handleStatusUpdate(b._id, 'Checked-In')} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
+                          Check In
+                        </button>
+                      )}
+                      {hasPermission('bookings', 'edit') && b.status === 'Checked-In' && (
+                        <button className="btn btn-secondary" onClick={() => handleStatusUpdate(b._id, 'Checked-Out')} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
+                          Check Out
+                        </button>
+                      )}
+                      {(hasPermission('bookings', 'delete') || hasPermission('bookings', 'edit')) && b.status !== 'Cancelled' && b.status !== 'Checked-Out' && (
+                        <button className="btn btn-secondary" onClick={() => openCancelDialog(b)} style={{ fontSize: '0.75rem', padding: '4px 8px', color: '#dc2626' }}>
+                          {b.status === 'Pending' ? 'Decline' : 'Cancel'}
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Front-Desk Reservation Modal */}
       {showModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '640px', padding: '32px', maxHeight: '90vh', overflowY: 'auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '640px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h2 style={{ fontSize: '1.4rem', color: '#0f172a' }}>Create Front-Desk Reservation</h2>
+              <h2 style={{ fontSize: '1.3rem', color: '#0f172a' }}>Create Front-Desk Reservation</h2>
               <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
             </div>
 
@@ -320,8 +322,8 @@ export default function BookingManagement() {
             <form onSubmit={handleCreateWalkIn} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               
               {/* Primary Guest Details */}
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: '700', marginBottom: '12px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '12px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <User size={16} /> Primary Guest Information
                 </h3>
 
@@ -331,7 +333,7 @@ export default function BookingManagement() {
                     <input type="text" required placeholder="e.g. John Doe" value={guestName} onChange={e => setGuestName(e.target.value)} style={{ width: '100%', padding: '10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', marginTop: '4px' }} />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div className="grid-cols-2">
                     <div>
                       <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600' }}>Email Address</label>
                       <input type="email" required placeholder="john@example.com" value={guestEmail} onChange={e => setGuestEmail(e.target.value)} style={{ width: '100%', padding: '10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', marginTop: '4px' }} />
@@ -343,7 +345,7 @@ export default function BookingManagement() {
                   </div>
 
                   {/* ID Document Details & Upload */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '12px' }}>
+                  <div className="grid-cols-2">
                     <div>
                       <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600' }}>ID Document Type</label>
                       <select value={idType} onChange={e => setIdType(e.target.value)} style={{ width: '100%', padding: '10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', marginTop: '4px' }}>
@@ -395,13 +397,13 @@ export default function BookingManagement() {
               </div>
 
               {/* Room & Dates Selection */}
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: '700', marginBottom: '12px', color: 'var(--accent-secondary)' }}>
+              <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '12px', color: 'var(--accent-secondary)' }}>
                   Reservation & Staying Details
                 </h3>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '12px' }}>
+                  <div className="grid-cols-2">
                     <div>
                       <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600' }}>Select Room</label>
                       <select value={selectedRoom} onChange={e => setSelectedRoom(e.target.value)} style={{ width: '100%', padding: '10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', marginTop: '4px' }}>
@@ -423,7 +425,7 @@ export default function BookingManagement() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div className="grid-cols-2">
                     <div>
                       <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600' }}>Check-in Date</label>
                       <input type="date" value={checkInDate} onChange={e => setCheckInDate(e.target.value)} style={{ width: '100%', padding: '10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', marginTop: '4px' }} />
@@ -436,19 +438,19 @@ export default function BookingManagement() {
                 </div>
               </div>
 
-              {/* Additional Companion Guests Section (if guestsCount > 1) */}
+              {/* Additional Companion Guests Section */}
               {guestsCount > 1 && (
-                <div style={{ background: 'rgba(147, 51, 234, 0.04)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(147, 51, 234, 0.2)' }}>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: '700', color: '#9333ea', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ background: 'rgba(147, 51, 234, 0.04)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(147, 51, 234, 0.2)' }}>
+                  <h3 style={{ fontSize: '0.85rem', fontWeight: '700', color: '#9333ea', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Users size={16} /> Companion Guest Information ({additionalGuests.length} Additional)
                   </h3>
                   
                   {additionalGuests.map((companion, idx) => (
-                    <div key={idx} style={{ padding: '12px', background: '#ffffff', borderRadius: '6px', marginBottom: '10px', border: '1px solid #e2e8f0' }}>
+                    <div key={idx} style={{ padding: '10px', background: '#ffffff', borderRadius: '6px', marginBottom: '10px', border: '1px solid #e2e8f0' }}>
                       <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '8px' }}>
                         Guest #{idx + 2} (Companion)
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '8px' }}>
+                      <div className="grid-cols-2" style={{ marginBottom: '8px' }}>
                         <input
                           type="text"
                           placeholder="Companion Full Name"
@@ -458,13 +460,13 @@ export default function BookingManagement() {
                         />
                         <input
                           type="text"
-                          placeholder="Phone / Contact (Optional)"
+                          placeholder="Phone / Contact"
                           value={companion.phone}
                           onChange={e => updateCompanionGuest(idx, 'phone', e.target.value)}
                           style={{ padding: '8px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '4px', color: '#0f172a', fontSize: '0.85rem' }}
                         />
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '10px' }}>
+                      <div className="grid-cols-2">
                         <select
                           value={companion.idType}
                           onChange={e => updateCompanionGuest(idx, 'idType', e.target.value)}
@@ -488,7 +490,7 @@ export default function BookingManagement() {
               )}
 
               {/* Source & Payment */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="grid-cols-2">
                 <div>
                   <label style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '600' }}>Reservation Source</label>
                   <select value={source} onChange={e => setSource(e.target.value)} style={{ width: '100%', padding: '10px', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a', marginTop: '4px' }}>
@@ -517,17 +519,17 @@ export default function BookingManagement() {
 
       {/* Details View Modal */}
       {viewBooking && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '550px', padding: '32px', maxHeight: '90vh', overflowY: 'auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '550px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '1.4rem', color: '#0f172a' }}>Reservation Details ({viewBooking.bookingCode})</h2>
+              <h2 style={{ fontSize: '1.3rem', color: '#0f172a' }}>Reservation Details ({viewBooking.bookingCode})</h2>
               <button onClick={() => setViewBooking(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '1rem', color: 'var(--accent-primary)', marginBottom: '8px' }}>Primary Guest</h3>
-                <div style={{ fontWeight: '700', fontSize: '1.1rem', color: '#0f172a' }}>{viewBooking.guest?.name}</div>
+                <h3 style={{ fontSize: '0.95rem', color: 'var(--accent-primary)', marginBottom: '8px' }}>Primary Guest</h3>
+                <div style={{ fontWeight: '700', fontSize: '1.05rem', color: '#0f172a' }}>{viewBooking.guest?.name}</div>
                 <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Email: {viewBooking.guest?.email}</div>
                 <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Phone: {viewBooking.guest?.phone}</div>
                 {viewBooking.guest?.idNumber && (
@@ -549,10 +551,10 @@ export default function BookingManagement() {
 
               {/* Staying Guests */}
               <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '1rem', color: 'var(--accent-secondary)', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '0.95rem', color: 'var(--accent-secondary)', marginBottom: '8px' }}>
                   Staying Occupants ({viewBooking.guestsCount || 1} Total)
                 </h3>
-                <div style={{ fontSize: '0.9rem', color: '#0f172a', fontWeight: '600' }}>1. {viewBooking.guest?.name} (Primary)</div>
+                <div style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: '600' }}>1. {viewBooking.guest?.name} (Primary)</div>
                 {viewBooking.guest?.additionalGuests && viewBooking.guest.additionalGuests.map((g, idx) => (
                   <div key={idx} style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px', paddingLeft: '12px', borderLeft: '2px solid var(--accent-primary)' }}>
                     {idx + 2}. {g.name || 'Companion Guest'} {g.idNumber ? `(${g.idType}: ${g.idNumber})` : ''}
@@ -574,7 +576,7 @@ export default function BookingManagement() {
                   <span style={{ color: 'var(--text-secondary)' }}>Check-out:</span>
                   <span style={{ color: '#0f172a' }}>{new Date(viewBooking.checkOutDate).toLocaleDateString()}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #cbd5e1', fontSize: '1.1rem', fontWeight: '800' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #cbd5e1', fontSize: '1.05rem', fontWeight: '800' }}>
                   <span>Total Charges:</span>
                   <span style={{ color: 'var(--accent-primary)' }}>PKR {viewBooking.totalAmount}</span>
                 </div>
@@ -586,10 +588,10 @@ export default function BookingManagement() {
 
       {/* Cancellation Modal */}
       {showCancelModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
-            <h2 style={{ fontSize: '1.3rem', color: '#dc2626', marginBottom: '12px' }}>Cancel Reservation</h2>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '420px' }}>
+            <h2 style={{ fontSize: '1.2rem', color: '#dc2626', marginBottom: '12px' }}>Cancel Reservation</h2>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
               Are you sure you want to cancel booking <strong>{targetBooking?.bookingCode}</strong>?
             </p>
 

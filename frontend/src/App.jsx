@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -14,6 +14,7 @@ import BillingManagement from './pages/admin/BillingManagement';
 import HousekeepingPage from './pages/admin/HousekeepingPage';
 import ReportsPage from './pages/admin/ReportsPage';
 import StaffManagement from './pages/admin/StaffManagement';
+import { Menu, Building2 } from 'lucide-react';
 
 // Protected Route Wrapper with Permission Validation
 function ProtectedRoute({ children, module, action = 'view' }) {
@@ -44,7 +45,7 @@ function ProtectedRoute({ children, module, action = 'view' }) {
 
 // Smart Admin Home Router Component that redirects staff users to their allowed home section
 function AdminHomeRouter() {
-  const { user, hasPermission } = useAuth();
+  const { hasPermission, user } = useAuth();
 
   if (hasPermission('reports')) return <AdminDashboard />;
   if (hasPermission('bookings')) return <Navigate to="/admin/bookings" replace />;
@@ -68,6 +69,8 @@ function AdminHomeRouter() {
 function AppLayout() {
   const location = useLocation();
   const { user } = useAuth();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
   const isLoginPage = location.pathname === '/login';
   const showSidebar = !isLoginPage && (!!user || location.pathname.startsWith('/admin'));
 
@@ -133,16 +136,70 @@ function AppLayout() {
 
   if (showSidebar) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-dark)' }}>
-        <Sidebar />
-        <main style={{ 
-          flex: 1, 
-          marginLeft: '260px', 
-          width: 'calc(100% - 260px)',
-          minHeight: '100vh'
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)' }}>
+        {/* Mobile Top Navigation Bar */}
+        <header className="mobile-admin-header" style={{
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '12px 16px',
+          background: '#ffffff',
+          borderBottom: '1px solid #e2e8f0',
+          position: 'sticky',
+          top: 0,
+          zIndex: 90
         }}>
-          {routes}
-        </main>
+          <button 
+            onClick={() => setMobileSidebarOpen(true)}
+            className="btn btn-secondary"
+            style={{ padding: '8px', border: 'none', background: 'transparent' }}
+          >
+            <Menu size={24} />
+          </button>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--accent-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <Building2 size={18} />
+            </div>
+            <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#0f172a' }}>
+              Care<span className="text-gradient">Haven</span>
+            </span>
+          </div>
+
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-primary)', background: 'rgba(5, 150, 105, 0.1)', padding: '4px 10px', borderRadius: '20px' }}>
+            {user?.role || 'Staff'}
+          </div>
+        </header>
+
+        <div style={{ flex: 1, display: 'flex' }}>
+          <Sidebar isOpen={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
+          
+          <main className="main-content-area" style={{ 
+            flex: 1, 
+            minHeight: '100vh',
+            transition: 'all 0.3s ease'
+          }}>
+            {routes}
+          </main>
+        </div>
+
+        <style>{`
+          @media (min-width: 1025px) {
+            .main-content-area {
+              margin-left: 260px;
+              width: calc(100% - 260px);
+            }
+          }
+          @media (max-width: 1024px) {
+            .mobile-admin-header {
+              display: flex !important;
+            }
+            .main-content-area {
+              margin-left: 0 !important;
+              width: 100% !important;
+            }
+          }
+        `}</style>
       </div>
     );
   }

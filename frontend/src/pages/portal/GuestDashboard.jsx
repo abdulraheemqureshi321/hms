@@ -37,17 +37,19 @@ export default function GuestDashboard() {
   };
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1200px' }}>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
-          My <span className="text-gradient">Reservations & History</span>
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
-          Welcome, {user?.name}! View your upcoming hotel stays and manage your bookings
-        </p>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1200px' }}>
+      <div className="responsive-header">
+        <div>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
+            My <span className="text-gradient">Reservations & History</span>
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
+            Welcome, {user?.name}! View your upcoming hotel stays and manage your bookings
+          </p>
+        </div>
       </div>
 
-      <div className="glass-panel" style={{ padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+      <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
         {reservations.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
             You do not have any active or past reservations yet.
@@ -55,10 +57,10 @@ export default function GuestDashboard() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {reservations.map(b => (
-              <div key={b._id} style={{ padding: '20px', borderRadius: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+              <div key={b._id} style={{ padding: '16px', borderRadius: '12px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '1.2rem', fontWeight: '800', color: '#0f172a' }}>{b.bookingCode}</span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0f172a' }}>{b.bookingCode}</span>
                     <span style={{
                       padding: '4px 10px',
                       borderRadius: '12px',
@@ -79,7 +81,7 @@ export default function GuestDashboard() {
                 </div>
 
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--accent-primary)' }}>PKR {b.totalAmount}</div>
+                  <div style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--accent-primary)' }}>PKR {b.totalAmount}</div>
                   {b.status === 'Confirmed' && (
                     <button className="btn btn-secondary" onClick={() => handleCancelMyBooking(b._id)} style={{ fontSize: '0.75rem', padding: '6px 12px', marginTop: '8px', color: '#e11d48', borderColor: '#fca5a5' }}>
                       Cancel Reservation

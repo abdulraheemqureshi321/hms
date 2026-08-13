@@ -147,14 +147,14 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
       {/* Header Title & Refresh */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             System <span className="text-gradient">Overview</span> & Real-time Metrics
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             Live status of room occupancy, revenue analytics, and housekeeping
           </p>
         </div>
@@ -164,78 +164,78 @@ export default function AdminDashboard() {
       </div>
 
       {/* Primary KPI Metric Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+      <div className="grid-cols-4" style={{ marginBottom: '32px' }}>
         {/* Total Revenue */}
-        <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Total Revenue</span>
-            <div style={{ padding: '10px', borderRadius: '10px', background: 'rgba(5, 150, 105, 0.1)', color: '#059669' }}>
-              <DollarSign size={20} />
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Total Revenue</span>
+            <div style={{ padding: '8px', borderRadius: '10px', background: 'rgba(5, 150, 105, 0.1)', color: '#059669' }}>
+              <DollarSign size={18} />
             </div>
           </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#0f172a' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             PKR {metrics?.totalRevenue?.toLocaleString() || 0}
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#059669', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+          <div style={{ fontSize: '0.75rem', color: '#059669', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
             <ArrowUpRight size={14} /> Real-time payment accruals
           </div>
         </div>
 
         {/* Occupancy Rate */}
-        <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Occupancy Rate</span>
-            <div style={{ padding: '10px', borderRadius: '10px', background: 'rgba(5, 150, 105, 0.1)', color: '#059669' }}>
-              <Percent size={20} />
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Occupancy Rate</span>
+            <div style={{ padding: '8px', borderRadius: '10px', background: 'rgba(5, 150, 105, 0.1)', color: '#059669' }}>
+              <Percent size={18} />
             </div>
           </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#0f172a' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             {metrics?.occupancyRate || 0}%
           </div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
             {metrics?.occupiedRooms + metrics?.reservedRooms} of {metrics?.totalRooms} rooms reserved/occupied
           </div>
         </div>
 
         {/* Total Bookings */}
-        <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Total Reservations</span>
-            <div style={{ padding: '10px', borderRadius: '10px', background: 'rgba(147, 51, 234, 0.1)', color: '#9333ea' }}>
-              <CalendarCheck size={20} />
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Total Reservations</span>
+            <div style={{ padding: '8px', borderRadius: '10px', background: 'rgba(147, 51, 234, 0.1)', color: '#9333ea' }}>
+              <CalendarCheck size={18} />
             </div>
           </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#0f172a' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             {metrics?.totalBookings || 0}
           </div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px' }}>
             {metrics?.confirmedBookings} Confirmed • {metrics?.checkedInBookings} Checked In
           </div>
         </div>
 
         {/* Housekeeping Action Required */}
-        <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Dirty Rooms</span>
-            <div style={{ padding: '10px', borderRadius: '10px', background: 'rgba(225, 29, 72, 0.1)', color: '#e11d48' }}>
-              <Sparkles size={20} />
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Dirty Rooms</span>
+            <div style={{ padding: '8px', borderRadius: '10px', background: 'rgba(225, 29, 72, 0.1)', color: '#e11d48' }}>
+              <Sparkles size={18} />
             </div>
           </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#0f172a' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             {metrics?.dirtyRooms || 0}
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#e11d48', marginTop: '6px', fontWeight: '600' }}>
+          <div style={{ fontSize: '0.75rem', color: '#e11d48', marginTop: '6px', fontWeight: '600' }}>
             Needs housekeeping turn-around
           </div>
         </div>
       </div>
 
-      {/* 🟢 NEW SECTION: LIVE ALL ROOMS & STATUS MATRIX */}
-      <div className="glass-panel" style={{ padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0', marginBottom: '32px' }}>
+      {/* Live Rooms Matrix */}
+      <div className="glass-panel" style={{ padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0', marginBottom: '32px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
           <div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Building2 size={22} color="var(--accent-primary)" /> Live Room Status Matrix
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Building2 size={20} color="var(--accent-primary)" /> Live Room Status Matrix
             </h2>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
               Real-time visual dashboard displaying all hotel rooms, current occupancy state, and housekeeping readiness.
@@ -243,7 +243,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Search Input */}
-          <div style={{ position: 'relative', width: '260px' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '260px' }}>
             <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
             <input
               type="text"
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Status Filter Tabs */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '24px', borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px', borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
           {[
             { id: 'ALL', label: 'All Rooms', count: roomCounts.ALL, color: '#334155' },
             { id: 'Available', label: 'Available', count: roomCounts.Available, color: '#059669' },
@@ -275,13 +275,13 @@ export default function AdminDashboard() {
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
               style={{
-                padding: '8px 16px',
+                padding: '6px 12px',
                 borderRadius: '20px',
                 border: statusFilter === tab.id ? `2px solid ${tab.color}` : '1px solid #e2e8f0',
                 background: statusFilter === tab.id ? `${tab.color}15` : '#f8fafc',
                 color: statusFilter === tab.id ? tab.color : '#64748b',
                 fontWeight: statusFilter === tab.id ? '700' : '500',
-                fontSize: '0.85rem',
+                fontSize: '0.8rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -291,11 +291,11 @@ export default function AdminDashboard() {
             >
               {tab.label}
               <span style={{
-                padding: '2px 8px',
+                padding: '2px 6px',
                 borderRadius: '10px',
                 background: statusFilter === tab.id ? tab.color : '#e2e8f0',
                 color: statusFilter === tab.id ? '#ffffff' : '#475569',
-                fontSize: '0.75rem',
+                fontSize: '0.7rem',
                 fontWeight: '700'
               }}>
                 {tab.count}
@@ -310,7 +310,7 @@ export default function AdminDashboard() {
             No rooms found matching status '{statusFilter}' or search query.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
+          <div className="grid-cols-3">
             {filteredRooms.map((room) => {
               const badge = getStatusBadgeStyle(room.status);
               const cleanBadge = getCleaningBadgeStyle(room.cleaningStatus);
@@ -333,11 +333,11 @@ export default function AdminDashboard() {
                   {/* Top Bar: Room # & Status Badge */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: badge.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: badge.color }}>
-                        <IconComp size={18} />
+                      <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: badge.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: badge.color }}>
+                        <IconComp size={16} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0f172a' }}>
+                        <div style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a' }}>
                           Room {room.roomNumber}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
@@ -347,9 +347,9 @@ export default function AdminDashboard() {
                     </div>
 
                     <span style={{
-                      padding: '4px 10px',
+                      padding: '4px 8px',
                       borderRadius: '12px',
-                      fontSize: '0.75rem',
+                      fontSize: '0.7rem',
                       fontWeight: '700',
                       background: badge.bg,
                       color: badge.color,
@@ -406,16 +406,16 @@ export default function AdminDashboard() {
       </div>
 
       {/* Grid Section: Booking Source Breakdown & Activity Feed */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+      <div className="grid-cols-2">
         {/* Booking Source Breakdown */}
-        <div className="glass-panel" style={{ padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-          <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ fontSize: '1.15rem', color: '#0f172a', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Layers size={18} color="var(--accent-primary)" /> Reservation Source Channels
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '6px', color: '#0f172a' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px', color: '#0f172a' }}>
                 <span>Online Guest Portal</span>
                 <span style={{ fontWeight: '700' }}>{metrics?.sourceBreakdown?.portal || 0} Bookings</span>
               </div>
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '6px', color: '#0f172a' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px', color: '#0f172a' }}>
                 <span>Front-Desk Walk-Ins</span>
                 <span style={{ fontWeight: '700' }}>{metrics?.sourceBreakdown?.walkIn || 0} Bookings</span>
               </div>
@@ -435,7 +435,7 @@ export default function AdminDashboard() {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '6px', color: '#0f172a' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px', color: '#0f172a' }}>
                 <span>Phone Reservations</span>
                 <span style={{ fontWeight: '700' }}>{metrics?.sourceBreakdown?.phone || 0} Bookings</span>
               </div>
@@ -447,13 +447,13 @@ export default function AdminDashboard() {
         </div>
 
         {/* Real-time Socket Activity Feed */}
-        <div className="glass-panel" style={{ padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-          <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ fontSize: '1.15rem', color: '#0f172a', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Clock size={18} color="var(--accent-secondary)" /> Live Real-Time Event Feed
           </h3>
 
           {activityFeed.length === 0 ? (
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '40px 0' }}>
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '40px 0' }}>
               Listening for live WebSocket events (bookings, check-ins, housekeeping)...
             </div>
           ) : (
@@ -468,7 +468,7 @@ export default function AdminDashboard() {
                   justifyContent: 'space-between',
                   alignItems: 'center'
                 }}>
-                  <span style={{ fontSize: '0.88rem', color: '#0f172a' }}>{item.text}</span>
+                  <span style={{ fontSize: '0.85rem', color: '#0f172a' }}>{item.text}</span>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{item.time}</span>
                 </div>
               ))}

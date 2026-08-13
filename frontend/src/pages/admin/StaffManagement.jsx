@@ -163,13 +163,13 @@ export default function StaffManagement() {
   };
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             Staff & <span className="text-gradient">RBAC Access Control</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             {user?.role === 'Admin'
               ? 'Admin Mode: Full privilege control over Managers & Staff'
               : 'Manager Mode: Assign employee permissions within your own granted limits'}
@@ -195,122 +195,114 @@ export default function StaffManagement() {
       )}
 
       {/* Staff Members List */}
-      <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-              <th style={{ padding: '12px' }}>NAME / EMAIL</th>
-              <th style={{ padding: '12px' }}>ROLE</th>
-              <th style={{ padding: '12px' }}>SHIFT SCHEDULE</th>
-              <th style={{ padding: '12px' }}>CREATED BY</th>
-              <th style={{ padding: '12px' }}>MODULE PERMISSIONS</th>
-              <th style={{ padding: '12px' }}>STATUS</th>
-              <th style={{ padding: '12px' }}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {staffList.map((item) => (
-              <tr key={item._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                <td style={{ padding: '16px 12px' }}>
-                  <div style={{ fontWeight: '700', color: '#0f172a' }}>{item.name}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{item.email}</div>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    background: item.role === 'Admin' ? 'rgba(225, 29, 72, 0.1)' : item.role === 'Manager' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(5, 150, 105, 0.1)',
-                    color: item.role === 'Admin' ? '#e11d48' : item.role === 'Manager' ? '#d97706' : '#059669'
-                  }}>
-                    {item.role}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{ padding: '2px 8px', borderRadius: '6px', background: '#f8fafc', border: '1px solid #e2e8f0', fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>
-                    {item.shift || 'Morning'}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px', color: 'var(--text-secondary)' }}>
-                  {item.created_by ? item.created_by.name : 'System'}
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  {item.role === 'Admin' ? (
-                    <span style={{ color: '#059669', fontSize: '0.8rem', fontWeight: '600' }}>Full Unrestricted Access</span>
-                  ) : (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {item.permissions?.map((p, idx) => (
-                        <span key={idx} style={{ padding: '2px 8px', borderRadius: '4px', background: '#f1f5f9', fontSize: '0.75rem', border: '1px solid #cbd5e1', color: '#334155' }}>
-                          {p.module} ({p.actions.join(',')})
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{ color: item.isActive ? '#059669' : '#e11d48', fontWeight: '700', fontSize: '0.85rem' }}>
-                    {item.isActive ? 'Active' : 'Suspended'}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  {item.role !== 'Admin' && (
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => openEditModal(item)}
-                        style={{ fontSize: '0.75rem', padding: '4px 8px' }}
-                        title="Edit Staff Account & Permissions"
-                      >
-                        <Edit2 size={12} /> Edit
-                      </button>
-
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleToggleStatus(item)}
-                        style={{ 
-                          fontSize: '0.75rem', 
-                          padding: '4px 8px', 
-                          color: item.isActive ? '#d97706' : '#059669', 
-                          borderColor: item.isActive ? '#fde68a' : '#a7f3d0' 
-                        }}
-                        title={item.isActive ? 'Suspend Account' : 'Activate Account'}
-                      >
-                        <Power size={12} /> {item.isActive ? 'Suspend' : 'Activate'}
-                      </button>
-
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleDeleteStaff(item)}
-                        style={{ fontSize: '0.75rem', padding: '4px 8px', color: '#e11d48', borderColor: '#fca5a5' }}
-                        title="Delete Account"
-                      >
-                        <Trash2 size={12} /> Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="table-responsive">
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
+                <th style={{ padding: '12px' }}>NAME / EMAIL</th>
+                <th style={{ padding: '12px' }}>ROLE</th>
+                <th style={{ padding: '12px' }}>SHIFT SCHEDULE</th>
+                <th style={{ padding: '12px' }}>CREATED BY</th>
+                <th style={{ padding: '12px' }}>MODULE PERMISSIONS</th>
+                <th style={{ padding: '12px' }}>STATUS</th>
+                <th style={{ padding: '12px' }}>ACTIONS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {staffList.map((item) => (
+                <tr key={item._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                  <td style={{ padding: '14px 12px' }}>
+                    <div style={{ fontWeight: '700', color: '#0f172a' }}>{item.name}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{item.email}</div>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      background: item.role === 'Admin' ? 'rgba(225, 29, 72, 0.1)' : item.role === 'Manager' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(5, 150, 105, 0.1)',
+                      color: item.role === 'Admin' ? '#e11d48' : item.role === 'Manager' ? '#d97706' : '#059669'
+                    }}>
+                      {item.role}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{ padding: '2px 8px', borderRadius: '6px', background: '#f8fafc', border: '1px solid #e2e8f0', fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>
+                      {item.shift || 'Morning'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px', color: 'var(--text-secondary)' }}>
+                    {item.created_by ? item.created_by.name : 'System'}
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    {item.role === 'Admin' ? (
+                      <span style={{ color: '#059669', fontSize: '0.8rem', fontWeight: '600' }}>Full Unrestricted Access</span>
+                    ) : (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                        {item.permissions?.map((p, idx) => (
+                          <span key={idx} style={{ padding: '2px 8px', borderRadius: '4px', background: '#f1f5f9', fontSize: '0.75rem', border: '1px solid #cbd5e1', color: '#334155' }}>
+                            {p.module} ({p.actions.join(',')})
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{ color: item.isActive ? '#059669' : '#e11d48', fontWeight: '700', fontSize: '0.85rem' }}>
+                      {item.isActive ? 'Active' : 'Suspended'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    {item.role !== 'Admin' && (
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => openEditModal(item)}
+                          style={{ fontSize: '0.75rem', padding: '4px 8px' }}
+                          title="Edit Staff Account & Permissions"
+                        >
+                          <Edit2 size={12} /> Edit
+                        </button>
+
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleToggleStatus(item)}
+                          style={{ 
+                            fontSize: '0.75rem', 
+                            padding: '4px 8px', 
+                            color: item.isActive ? '#d97706' : '#059669', 
+                            borderColor: item.isActive ? '#fde68a' : '#a7f3d0' 
+                          }}
+                          title={item.isActive ? 'Suspend Account' : 'Activate Account'}
+                        >
+                          <Power size={12} /> {item.isActive ? 'Suspend' : 'Activate'}
+                        </button>
+
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleDeleteStaff(item)}
+                          style={{ fontSize: '0.75rem', padding: '4px 8px', color: '#e11d48', borderColor: '#fca5a5' }}
+                          title="Delete Account"
+                        >
+                          <Trash2 size={12} /> Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Account Creation / Editing Modal */}
       {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(15, 23, 42, 0.6)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: '20px'
-        }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '650px', padding: '32px', maxHeight: '90vh', overflowY: 'auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '16px', color: '#0f172a' }}>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '650px' }}>
+            <h2 style={{ fontSize: '1.4rem', marginBottom: '16px', color: '#0f172a' }}>
               {editingStaff ? `Edit Staff Account: ${editingStaff.name}` : 'Create New Staff Account'}
             </h2>
 
@@ -321,7 +313,7 @@ export default function StaffManagement() {
             )}
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="grid-cols-2">
                 <div>
                   <label style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '4px', display: 'block', fontWeight: '600' }}>Name</label>
                   <input
@@ -345,7 +337,7 @@ export default function StaffManagement() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="grid-cols-2">
                 <div>
                   <label style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '4px', display: 'block', fontWeight: '600' }}>
                     Password {editingStaff && '(Leave blank to keep unchanged)'}
@@ -397,7 +389,7 @@ export default function StaffManagement() {
                   {ALL_MODULES.map((mod) => (
                     <div key={mod.id} style={{ padding: '12px', borderRadius: '6px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
                       <div style={{ fontWeight: '700', fontSize: '0.85rem', marginBottom: '6px', color: '#0f172a' }}>{mod.label}</div>
-                      <div style={{ display: 'flex', gap: '12px' }}>
+                      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                         {ACTIONS.map(action => (
                           <label key={action} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: '#475569', cursor: 'pointer' }}>
                             <input

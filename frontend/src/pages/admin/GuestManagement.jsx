@@ -34,17 +34,17 @@ export default function GuestManagement() {
   };
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1400px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
+      <div className="responsive-header">
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             Guest <span className="text-gradient">Directory & Profiles</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '4px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
             Unified guest records shared across front-desk walk-ins and portal user accounts
           </p>
         </div>
-        <div style={{ position: 'relative', width: '300px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '320px' }}>
           <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input
             type="text"
@@ -56,63 +56,65 @@ export default function GuestManagement() {
         </div>
       </div>
 
-      <div className="glass-panel" style={{ padding: '24px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-              <th style={{ padding: '12px' }}>GUEST NAME</th>
-              <th style={{ padding: '12px' }}>CONTACT DETAILS</th>
-              <th style={{ padding: '12px' }}>ID VERIFICATION</th>
-              <th style={{ padding: '12px' }}>ACCOUNT TYPE</th>
-              <th style={{ padding: '12px' }}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {guests.map(g => (
-              <tr key={g._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                <td style={{ padding: '16px 12px', fontWeight: '700', color: '#0f172a' }}>
-                  {g.name}
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#334155' }}>
-                    <Mail size={14} /> {g.email}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px' }}>
-                    <Phone size={14} /> {g.phone}
-                  </div>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <div style={{ fontWeight: '600', color: '#0f172a' }}>{g.idType}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{g.idNumber || 'N/A'}</div>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    background: g.user ? 'rgba(147, 51, 234, 0.1)' : '#f1f5f9',
-                    color: g.user ? '#9333ea' : '#475569'
-                  }}>
-                    {g.user ? 'Portal Account' : 'Front-Desk Record'}
-                  </span>
-                </td>
-                <td style={{ padding: '16px 12px' }}>
-                  <button className="btn btn-secondary" onClick={() => viewHistory(g)} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
-                    <History size={14} /> Stay History
-                  </button>
-                </td>
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="table-responsive">
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
+                <th style={{ padding: '12px' }}>GUEST NAME</th>
+                <th style={{ padding: '12px' }}>CONTACT DETAILS</th>
+                <th style={{ padding: '12px' }}>ID VERIFICATION</th>
+                <th style={{ padding: '12px' }}>ACCOUNT TYPE</th>
+                <th style={{ padding: '12px' }}>ACTIONS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {guests.map(g => (
+                <tr key={g._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
+                  <td style={{ padding: '14px 12px', fontWeight: '700', color: '#0f172a' }}>
+                    {g.name}
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#334155' }}>
+                      <Mail size={14} /> {g.email}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px' }}>
+                      <Phone size={14} /> {g.phone}
+                    </div>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <div style={{ fontWeight: '600', color: '#0f172a' }}>{g.idType}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{g.idNumber || 'N/A'}</div>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <span style={{
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      background: g.user ? 'rgba(147, 51, 234, 0.1)' : '#f1f5f9',
+                      color: g.user ? '#9333ea' : '#475569'
+                    }}>
+                      {g.user ? 'Portal Account' : 'Front-Desk Record'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
+                    <button className="btn btn-secondary" onClick={() => viewHistory(g)} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
+                      <History size={14} /> Stay History
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Stay History Modal */}
       {historyModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '600px', padding: '32px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
-            <h2 style={{ fontSize: '1.4rem', color: '#0f172a', marginBottom: '16px' }}>Stay History for {selectedGuest?.name}</h2>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '600px' }}>
+            <h2 style={{ fontSize: '1.3rem', color: '#0f172a', marginBottom: '16px' }}>Stay History for {selectedGuest?.name}</h2>
             
             {guestHistory.length === 0 ? (
               <p style={{ color: 'var(--text-muted)' }}>No previous booking history found for this guest.</p>
