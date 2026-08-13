@@ -12,13 +12,54 @@ import {
   FileText, 
   Save, 
   Calculator,
-  ShieldCheck
+  ShieldCheck,
+  FileSpreadsheet,
+  Search
 } from 'lucide-react';
+import { exportToExcel } from '../../utils/excelExport';
 
 export default function BillingManagement() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [methodFilter, setMethodFilter] = useState('All');
+
+  const filteredInvoices = invoices.filter(inv => {
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = !query || 
+      (inv.booking?.bookingCode && inv.booking.bookingCode.toLowerCase().includes(query)) ||
+      (inv.booking?.guest?.name && inv.booking.guest.name.toLowerCase().includes(query)) ||
+      (inv.booking?.guest?.email && inv.booking.guest.email.toLowerCase().includes(query)) ||
+      (inv.booking?.room?.roomNumber && inv.booking.room.roomNumber.toString().includes(query)) ||
+      (inv.transactionId && inv.transactionId.toLowerCase().includes(query));
+
+    const matchesStatus = statusFilter === 'All' || inv.paymentStatus === statusFilter;
+    const matchesMethod = methodFilter === 'All' || inv.paymentMethod === methodFilter;
+
+    return matchesSearch && matchesStatus && matchesMethod;
+  });
+
+  const handleExportExcel = () => {
+    const exportData = filteredInvoices.map(inv => ({
+      'Invoice / Booking Code': inv.booking?.bookingCode || 'N/A',
+      'Guest Name': inv.booking?.guest?.name || 'Walk-in Guest',
+      'Guest Email': inv.booking?.guest?.email || '',
+      'Room Number': inv.booking?.room?.roomNumber || '',
+      'Subtotal ($)': (inv.amount - (inv.taxAmount || 0)),
+      'Tax & Surcharges ($)': inv.taxAmount || 0,
+      'Discount ($)': inv.discountAmount || 0,
+      'Total Amount ($)': inv.amount || 0,
+      'Payment Status': inv.paymentStatus || '',
+      'Payment Method': inv.paymentMethod || '',
+      'Transaction ID': inv.transactionId || 'N/A',
+      'Invoice Date': inv.createdAt ? new Date(inv.createdAt).toLocaleString() : ''
+    }));
+    exportToExcel(exportData, `Billing_Invoices_${new Date().toISOString().split('T')[0]}.xlsx`, 'Invoices');
+  };
 
   // Tax Management Modal State
   const [showTaxModal, setShowTaxModal] = useState(false);
@@ -123,6 +164,56 @@ export default function BillingManagement() {
         </div>
       </div>
 
+      {/* Search & Filter Toolbar */}
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', marginBottom: '20px', border: '1px solid #e2e8f0', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
+          <div style={{ position: 'relative', minWidth: '240px', flex: 1 }}>
+            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <input
+              type="text"
+              className="input-field"
+              style={{ paddingLeft: '38px', height: '40px', fontSize: '0.85rem' }}
+              placeholder="Search by Invoice Code, Guest Name, Room #..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <select
+            className="input-field"
+            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="All">All Payment Statuses</option>
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+            <option value="Refunded">Refunded</option>
+          </select>
+
+          <select
+            className="input-field"
+            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            value={methodFilter}
+            onChange={(e) => setMethodFilter(e.target.value)}
+          >
+            <option value="All">All Payment Methods</option>
+            <option value="card">Credit / Debit Card</option>
+            <option value="cash">Cash at Desk</option>
+            <option value="online">Online Transfer</option>
+            <option value="pay_at_hotel">Pay at Hotel</option>
+          </select>
+        </div>
+
+        <button
+          onClick={handleExportExcel}
+          className="btn btn-secondary"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px', padding: '0 16px', background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0', fontWeight: 700 }}
+        >
+          <FileSpreadsheet size={18} /> Export Excel ({filteredInvoices.length})
+        </button>
+      </div>
+
       {loading ? (
         <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading Invoices...</div>
       ) : (
@@ -141,7 +232,14 @@ export default function BillingManagement() {
               </tr>
             </thead>
             <tbody>
-              {invoices.map((inv) => (
+              {filteredInvoices.length === 0 ? (
+                <tr>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
+                    No invoices found matching selected filters.
+                  </td>
+                </tr>
+              ) : (
+                filteredInvoices.map((inv) => (
                 <tr key={inv._id} style={{ borderBottom: '1px solid var(--border-light)' }}>
                   <td style={{ padding: '16px', fontWeight: 600 }}>{inv.booking?.bookingCode || 'N/A'}</td>
                   <td style={{ padding: '16px' }}>{inv.booking?.guest?.name || 'Walk-in Guest'}</td>
@@ -176,7 +274,7 @@ export default function BillingManagement() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

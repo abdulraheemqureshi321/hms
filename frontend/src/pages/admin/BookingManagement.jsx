@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { socket } from '../../services/socket';
 import { useAuth } from '../../context/AuthContext';
-import { Calendar, Plus, User, CheckCircle, XCircle, LogOut, PhoneCall, Globe, AlertTriangle, Upload, Eye, FileText, Users, X, Sparkles } from 'lucide-react';
+import { Calendar, Plus, User, CheckCircle, XCircle, LogOut, PhoneCall, Globe, AlertTriangle, Upload, Eye, FileText, Users, X, Sparkles, FileSpreadsheet, Search } from 'lucide-react';
+import { exportToExcel } from '../../utils/excelExport';
 
 export default function BookingManagement() {
   const [bookings, setBookings] = useState([]);
@@ -35,6 +36,45 @@ export default function BookingManagement() {
 
   // View Guest & Reservation Details Modal
   const [viewBooking, setViewBooking] = useState(null);
+
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [sourceFilter, setSourceFilter] = useState('All');
+
+  const filteredBookings = bookings.filter(b => {
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = !query || 
+      (b.bookingCode && b.bookingCode.toLowerCase().includes(query)) ||
+      (b.guest?.name && b.guest.name.toLowerCase().includes(query)) ||
+      (b.guest?.email && b.guest.email.toLowerCase().includes(query)) ||
+      (b.room?.roomNumber && b.room.roomNumber.toString().includes(query));
+
+    const matchesStatus = statusFilter === 'All' || b.status === statusFilter;
+    const matchesSource = sourceFilter === 'All' || b.source === sourceFilter;
+
+    return matchesSearch && matchesStatus && matchesSource;
+  });
+
+  const handleExportExcel = () => {
+    const exportData = filteredBookings.map(b => ({
+      'Booking Code': b.bookingCode || '',
+      'Guest Name': b.guest?.name || 'Walk-in Guest',
+      'Guest Email': b.guest?.email || '',
+      'Guest Phone': b.guest?.phone || '',
+      'Room Number': b.room?.roomNumber || '',
+      'Room Type': b.room?.roomType?.name || '',
+      'Guests Count': b.guestsCount || 1,
+      'Check-In Date': b.checkInDate ? new Date(b.checkInDate).toLocaleDateString() : '',
+      'Check-Out Date': b.checkOutDate ? new Date(b.checkOutDate).toLocaleDateString() : '',
+      'Total Amount ($)': b.totalAmount || 0,
+      'Status': b.status || '',
+      'Booking Source': b.source || '',
+      'Special Requests': b.specialRequests || '',
+      'Created At': b.createdAt ? new Date(b.createdAt).toLocaleString() : ''
+    }));
+    exportToExcel(exportData, `Bookings_Export_${new Date().toISOString().split('T')[0]}.xlsx`, 'Bookings');
+  };
 
   const fetchBookings = async () => {
     try {
@@ -197,6 +237,57 @@ export default function BookingManagement() {
         )}
       </div>
 
+      {/* Search & Filter Toolbar */}
+      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', marginBottom: '20px', border: '1px solid #e2e8f0', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
+          <div style={{ position: 'relative', minWidth: '240px', flex: 1 }}>
+            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <input
+              type="text"
+              className="input-field"
+              style={{ paddingLeft: '38px', height: '40px', fontSize: '0.85rem' }}
+              placeholder="Search by Booking Code, Guest Name, Room #..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <select
+            className="input-field"
+            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="All">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Checked-In">Checked-In</option>
+            <option value="Checked-Out">Checked-Out</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+
+          <select
+            className="input-field"
+            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value)}
+          >
+            <option value="All">All Sources</option>
+            <option value="portal">Online Portal</option>
+            <option value="walk-in">Walk-in</option>
+            <option value="phone">Phone Reservation</option>
+          </select>
+        </div>
+
+        <button
+          onClick={handleExportExcel}
+          className="btn btn-secondary"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px', padding: '0 16px', background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0', fontWeight: 700 }}
+        >
+          <FileSpreadsheet size={18} /> Export Excel ({filteredBookings.length})
+        </button>
+      </div>
+
       {/* Bookings List */}
       <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
         <div className="table-responsive">
@@ -214,7 +305,14 @@ export default function BookingManagement() {
               </tr>
             </thead>
             <tbody>
-              {bookings.map(b => (
+              {filteredBookings.length === 0 ? (
+                <tr>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
+                    No bookings found matching selected filters.
+                  </td>
+                </tr>
+              ) : (
+                filteredBookings.map(b => (
                 <tr key={b._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
                   <td style={{ padding: '14px 12px', fontWeight: '700', color: 'var(--accent-primary)' }}>
                     {b.bookingCode}
@@ -298,7 +396,7 @@ export default function BookingManagement() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
