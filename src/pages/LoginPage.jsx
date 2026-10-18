@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Building2, KeyRound, Mail, User, Phone, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Building2, KeyRound, Mail, User, Phone, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
@@ -39,21 +39,18 @@ export default function LoginPage() {
     }
   };
 
-  const setDemoUser = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setIsRegister(false);
-  };
-
   return (
     <div style={{
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: 'calc(100vh - 80px)',
-      padding: '40px 20px'
+      width: '100%',
+      minHeight: 'calc(100vh - 120px)',
+      padding: '40px 20px',
+      margin: '0 auto',
+      background: '#ffffff'
     }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '480px', padding: '40px' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '480px', padding: '40px', margin: '0 auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)' }}>
         <div style={{ textAlign: 'center', marginBottom: '30px' }}>
           <div style={{
             width: '48px',
@@ -64,11 +61,12 @@ export default function LoginPage() {
             alignItems: 'center',
             justifyContent: 'center',
             color: '#fff',
-            marginBottom: '12px'
+            marginBottom: '12px',
+            boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)'
           }}>
             <Building2 size={24} />
           </div>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '800' }}>
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
             {isRegister ? 'Create Guest Account' : 'Welcome Back'}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>
@@ -80,11 +78,12 @@ export default function LoginPage() {
           <div style={{
             padding: '12px 16px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            color: '#f87171',
+            background: 'rgba(225, 29, 72, 0.1)',
+            border: '1px solid rgba(225, 29, 72, 0.3)',
+            color: '#e11d48',
             fontSize: '0.85rem',
-            marginBottom: '20px'
+            marginBottom: '20px',
+            fontWeight: '500'
           }}>
             {error}
           </div>
@@ -94,7 +93,7 @@ export default function LoginPage() {
           {isRegister && (
             <>
               <div>
-                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block' }}>Full Name</label>
+                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Full Name</label>
                 <div style={{ position: 'relative' }}>
                   <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                   <input
@@ -106,10 +105,10 @@ export default function LoginPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid var(--border-color)',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
                       borderRadius: 'var(--radius-sm)',
-                      color: '#fff',
+                      color: '#0f172a',
                       fontSize: '0.95rem'
                     }}
                   />
@@ -117,7 +116,7 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block' }}>Phone Number</label>
+                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Phone Number</label>
                 <div style={{ position: 'relative' }}>
                   <Phone size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                   <input
@@ -129,10 +128,10 @@ export default function LoginPage() {
                     style={{
                       width: '100%',
                       padding: '12px 14px 12px 42px',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid var(--border-color)',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
                       borderRadius: 'var(--radius-sm)',
-                      color: '#fff',
+                      color: '#0f172a',
                       fontSize: '0.95rem'
                     }}
                   />
@@ -142,7 +141,7 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block' }}>Email Address</label>
+            <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Email Address</label>
             <div style={{ position: 'relative' }}>
               <Mail size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
               <input
@@ -154,10 +153,10 @@ export default function LoginPage() {
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 42px',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid var(--border-color)',
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
                   borderRadius: 'var(--radius-sm)',
-                  color: '#fff',
+                  color: '#0f172a',
                   fontSize: '0.95rem'
                 }}
               />
@@ -165,7 +164,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block' }}>Password</label>
+            <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Password</label>
             <div style={{ position: 'relative' }}>
               <KeyRound size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
               <input
@@ -177,10 +176,10 @@ export default function LoginPage() {
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 42px',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid var(--border-color)',
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
                   borderRadius: 'var(--radius-sm)',
-                  color: '#fff',
+                  color: '#0f172a',
                   fontSize: '0.95rem'
                 }}
               />
@@ -192,35 +191,14 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
+        <div style={{ textAlign: 'center', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
           <button
             type="button"
             onClick={() => setIsRegister(!isRegister)}
-            style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer', fontSize: '0.9rem' }}
+            style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer', fontSize: '0.9rem', fontWeight: '600' }}
           >
             {isRegister ? 'Already have an account? Sign In' : 'Need a guest portal account? Sign Up'}
           </button>
-        </div>
-
-        {/* Demo Credentials Quick Shortcuts for instant testing */}
-        <div style={{ marginTop: '24px', padding: '16px', borderRadius: 'var(--radius-sm)', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-secondary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ShieldCheck size={14} /> Quick Demo Shortcuts:
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            <button className="btn btn-secondary" onClick={() => setDemoUser('admin@hms.com', 'admin123')} style={{ fontSize: '0.75rem', padding: '6px' }}>
-              Admin User
-            </button>
-            <button className="btn btn-secondary" onClick={() => setDemoUser('manager@hms.com', 'manager123')} style={{ fontSize: '0.75rem', padding: '6px' }}>
-              Manager User
-            </button>
-            <button className="btn btn-secondary" onClick={() => setDemoUser('receptionist@hms.com', 'staff123')} style={{ fontSize: '0.75rem', padding: '6px' }}>
-              Receptionist
-            </button>
-            <button className="btn btn-secondary" onClick={() => setDemoUser('alex@example.com', 'guest123')} style={{ fontSize: '0.75rem', padding: '6px' }}>
-              Portal Guest
-            </button>
-          </div>
         </div>
       </div>
     </div>

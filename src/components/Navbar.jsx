@@ -14,171 +14,228 @@ import {
   LogOut, 
   LogIn, 
   Globe, 
-  ShieldAlert,
   Radio
 } from 'lucide-react';
 
-export default function Navbar() {
-  const { user, logout, hasPermission } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [isConnected, setIsConnected] = useState(socket.connected);
+/* ─────────────────────────────────────────────────────
+   GuestNavbar – renders on all non-admin routes
+   ───────────────────────────────────────────────────── */
+function GuestNavbar({ user, logout, location }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const isHomePage = location.pathname === '/';
 
+  // Close mobile menu whenever route changes
   useEffect(() => {
-    function onConnect() { setIsConnected(true); }
-    function onDisconnect() { setIsConnected(false); }
+    setMobileOpen(false);
+  }, [location.pathname]);
 
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-    };
-  }, []);
-
-  const isAdminPanel = location.pathname.startsWith('/admin');
+  // Prevent body scroll while menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
   return (
-    <header className="glass-panel" style={{
-      borderRadius: 0,
-      borderTop: 'none',
-      borderLeft: 'none',
-      borderRight: 'none',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      padding: '12px 24px',
-      background: 'rgba(11, 15, 25, 0.85)',
-      backdropFilter: 'blur(16px)'
-    }}>
-      <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px' }}>
-        {/* Brand Logo & Portal Switcher */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '10px',
-              background: 'var(--accent-gradient)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              boxShadow: 'var(--shadow-glow)'
-            }}>
-              <Building2 size={22} />
+    <>
+      <header className={`ch-navbar ${isHomePage ? 'ch-navbar-transparent' : ''}`}>
+        <div className="ch-nav-container">
+
+          {/* Brand logo */}
+          <Link to="/" className="ch-logo-link">
+            <div className="ch-logo-icon">
+              <Building2 size={24} />
             </div>
-            <div>
-              <div style={{ fontSize: '1.2rem', fontWeight: '800', letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.1 }}>
-                Care<span className="text-gradient">Haven</span> HMS
-              </div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                {isAdminPanel ? 'Admin & Staff Panel' : 'Online Guest Portal'}
-              </div>
+            <div className="ch-logo-text-group">
+              <div className="ch-logo-text-title">CareHaven Hotel</div>
+              <div className="ch-logo-text-sub">LUXURY RESORT &amp; SUITES</div>
             </div>
           </Link>
 
-          {/* Real-time Socket Indicator */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '4px 10px',
-            borderRadius: '20px',
-            background: isConnected ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-            border: `1px solid ${isConnected ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-            fontSize: '0.75rem',
-            color: isConnected ? '#4ade80' : '#f87171'
-          }}>
-            <Radio size={12} className={isConnected ? 'animate-pulse' : ''} />
-            {isConnected ? 'Real-Time Sync Active' : 'Connecting...'}
+          {/* Desktop nav links */}
+          <ul className="ch-nav-menu">
+            <li><a href="#about"    className="ch-nav-link">About</a></li>
+            <li><a href="#location" className="ch-nav-link">Location</a></li>
+            <li><a href="#gallery"  className="ch-nav-link">Gallery</a></li>
+            <li><a href="#rooms"    className="ch-nav-link">Book Rooms</a></li>
+          </ul>
+
+          {/* Right-hand actions */}
+          <div className="ch-nav-actions">
+            <Link to="/admin" className="ch-staff-link ch-hide-mobile">Staff Portal</Link>
+
+            {user ? (
+              <div className="ch-user-action-wrap">
+                {user.role === 'Guest' && (
+                  <Link
+                    to="/guest-dashboard"
+                    className="ch-staff-link ch-hide-mobile"
+                    style={{ color: 'var(--ch-green)', fontWeight: 700 }}
+                  >
+                    My Bookings
+                  </Link>
+                )}
+                <div className="ch-user-text ch-hide-mobile" style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--ch-text-dark)' }}>
+                    {user.name}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--ch-green)', fontWeight: 600 }}>
+                    {user.role}
+                  </div>
+                </div>
+                <button
+                  onClick={logout}
+                  title="Logout"
+                  className="ch-btn-logout-icon"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--ch-border)',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: 'var(--ch-text-secondary)',
+                    flexShrink: 0
+                  }}
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="ch-btn-signin ch-desktop-signin">
+                Sign in
+              </Link>
+            )}
+
+            {/* Mobile hamburger */}
+            <button
+              className="ch-mobile-menu-btn"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open navigation menu"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <line x1="3" y1="6"  x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
           </div>
         </div>
+      </header>
 
-        {/* Dynamic Navigation Links based on Role & Permissions */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {isAdminPanel ? (
-            <>
-              {hasPermission('reports') && (
-                <Link to="/admin" className={`btn btn-secondary ${location.pathname === '/admin' ? 'active-nav' : ''}`}>
-                  <BarChart3 size={16} /> Dashboard
-                </Link>
-              )}
-              {hasPermission('bookings') && (
-                <Link to="/admin/bookings" className={`btn btn-secondary ${location.pathname === '/admin/bookings' ? 'active-nav' : ''}`}>
-                  <Calendar size={16} /> Bookings
-                </Link>
-              )}
-              {hasPermission('rooms') && (
-                <Link to="/admin/rooms" className={`btn btn-secondary ${location.pathname === '/admin/rooms' ? 'active-nav' : ''}`}>
-                  <BedDouble size={16} /> Rooms
-                </Link>
-              )}
-              {hasPermission('guests') && (
-                <Link to="/admin/guests" className={`btn btn-secondary ${location.pathname === '/admin/guests' ? 'active-nav' : ''}`}>
-                  <Users size={16} /> Guests
-                </Link>
-              )}
-              {hasPermission('billing') && (
-                <Link to="/admin/billing" className={`btn btn-secondary ${location.pathname === '/admin/billing' ? 'active-nav' : ''}`}>
-                  <CreditCard size={16} /> Billing
-                </Link>
-              )}
-              {hasPermission('housekeeping') && (
-                <Link to="/admin/housekeeping" className={`btn btn-secondary ${location.pathname === '/admin/housekeeping' ? 'active-nav' : ''}`}>
-                  <Sparkles size={16} /> Housekeeping
-                </Link>
-              )}
-              {hasPermission('staff') && (
-                <Link to="/admin/staff" className={`btn btn-secondary ${location.pathname === '/admin/staff' ? 'active-nav' : ''}`}>
-                  <UserCheck size={16} /> Staff Access
-                </Link>
-              )}
-            </>
-          ) : (
-            <>
-              <Link to="/" className="btn btn-secondary">
-                <Globe size={16} /> Room Search
-              </Link>
-              {user && user.role === 'Guest' && (
-                <Link to="/guest-dashboard" className="btn btn-secondary">
-                  <Calendar size={16} /> My Reservations
-                </Link>
-              )}
-            </>
-          )}
-        </nav>
+      {/* ── Mobile fullscreen nav overlay ── */}
+      <nav className={`ch-mobile-nav ${mobileOpen ? 'open' : ''}`}>
+        {/* Close button */}
+        <button
+          className="ch-mobile-nav-close"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <line x1="18" y1="6"  x2="6"  y2="18"/>
+            <line x1="6"  y1="6"  x2="18" y2="18"/>
+          </svg>
+        </button>
 
-        {/* User Account Menu / Portal Switcher */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {isAdminPanel ? (
-            <Link to="/" className="btn btn-secondary" style={{ background: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.3)' }}>
-              <Globe size={16} /> Guest Portal View
-            </Link>
-          ) : (
-            <Link to="/admin" className="btn btn-secondary" style={{ background: 'rgba(168, 85, 247, 0.15)', borderColor: 'rgba(168, 85, 247, 0.3)' }}>
-              <ShieldAlert size={16} /> Staff Panel View
-            </Link>
-          )}
+        {/* Brand badge */}
+        <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+          <div style={{
+            fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em',
+            color: 'var(--ch-green)', textTransform: 'uppercase', marginBottom: '6px'
+          }}>
+            CareHaven Hotel
+          </div>
+          <div style={{ width: '40px', height: '2px', background: 'var(--ch-gold)', margin: '0 auto' }} />
+        </div>
 
-          {user ? (
+        {/* Mobile Logged-in User Card */}
+        {user && (
+          <div className="ch-mobile-user-card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#fff' }}>{user.name}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--accent-secondary)' }}>{user.role}</div>
+              <div style={{
+                width: '38px', height: '38px', borderRadius: '50%',
+                background: 'var(--ch-green)', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 700, fontSize: '0.95rem'
+              }}>
+                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </div>
-              <button className="btn btn-secondary" onClick={logout} title="Logout" style={{ padding: '8px 12px' }}>
-                <LogOut size={16} />
-              </button>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: 700, color: 'var(--ch-text-dark)', fontSize: '0.95rem' }}>{user.name}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ch-green)', fontWeight: 600 }}>{user.role} Account</div>
+              </div>
             </div>
+            {user.role === 'Guest' && (
+              <Link
+                to="/guest-dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="btn btn-secondary"
+                style={{
+                  width: '100%',
+                  marginTop: '10px',
+                  padding: '8px 14px',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  color: 'var(--ch-green)',
+                  borderColor: 'var(--ch-green)'
+                }}
+              >
+                View My Reservations
+              </Link>
+            )}
+          </div>
+        )}
+
+        <div className="ch-mobile-links-group">
+          <a href="#about"    className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>About</a>
+          <a href="#location" className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>Location</a>
+          <a href="#gallery"  className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>Gallery</a>
+          <a href="#rooms"    className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>Book Rooms</a>
+        </div>
+
+        <div className="ch-mobile-actions-group">
+          <Link to="/admin" className="ch-mobile-staff-btn" onClick={() => setMobileOpen(false)}>
+            Staff Portal
+          </Link>
+          {user ? (
+            <button
+              onClick={() => { logout(); setMobileOpen(false); }}
+              className="ch-mobile-logout-btn"
+            >
+              Sign Out
+            </button>
           ) : (
-            <Link to="/login" className="btn btn-primary">
-              <LogIn size={16} /> Staff / Guest Sign In
+            <Link
+              to="/login"
+              className="ch-btn-signin"
+              onClick={() => setMobileOpen(false)}
+              style={{ width: '100%', padding: '12px 32px', fontSize: '1rem', textAlign: 'center' }}
+            >
+              Sign In
             </Link>
           )}
         </div>
-      </div>
-    </header>
+      </nav>
+    </>
   );
+}
+
+/* ─────────────────────────────────────────────────────
+   Main Navbar export
+   ───────────────────────────────────────────────────── */
+export default function Navbar() {
+  const { user, logout } = useAuth();
+  const location = useLocation();
+
+  const isAdminPanel = location.pathname.startsWith('/admin');
+
+  if (isAdminPanel) {
+    return null; // Left Sidebar is rendered instead for Admin & Staff Panel
+  }
+
+  return <GuestNavbar user={user} logout={logout} location={location} />;
 }

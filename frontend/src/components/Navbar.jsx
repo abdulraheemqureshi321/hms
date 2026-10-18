@@ -1,24 +1,235 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { socket } from '../services/socket';
 import { 
   Building2, 
   Calendar, 
+  BedDouble, 
+  Users, 
+  CreditCard, 
+  Sparkles, 
+  BarChart3, 
+  UserCheck, 
   LogOut, 
   LogIn, 
   Globe, 
-  ShieldAlert,
-  Image,
-  MapPin,
-  Info,
-  Menu,
-  X
+  Radio
 } from 'lucide-react';
 
+/* ─────────────────────────────────────────────────────
+   GuestNavbar – renders on all non-admin routes
+   ───────────────────────────────────────────────────── */
+function GuestNavbar({ user, logout, location }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const isHomePage = location.pathname === '/';
+
+  // Close mobile menu whenever route changes
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  // Prevent body scroll while menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  return (
+    <>
+      <header className={`ch-navbar ${isHomePage ? 'ch-navbar-transparent' : ''}`}>
+        <div className="ch-nav-container">
+
+          {/* Brand logo */}
+          <Link to="/" className="ch-logo-link">
+            <div className="ch-logo-icon">
+              <Building2 size={24} />
+            </div>
+            <div className="ch-logo-text-group">
+              <div className="ch-logo-text-title">CareHaven Hotel</div>
+              <div className="ch-logo-text-sub">LUXURY RESORT &amp; SUITES</div>
+            </div>
+          </Link>
+
+          {/* Desktop nav links */}
+          <ul className="ch-nav-menu">
+            <li><a href="#about"    className="ch-nav-link">About</a></li>
+            <li><a href="#location" className="ch-nav-link">Location</a></li>
+            <li><a href="#gallery"  className="ch-nav-link">Gallery</a></li>
+            <li><a href="#rooms"    className="ch-nav-link">Book Rooms</a></li>
+          </ul>
+
+          {/* Right-hand actions */}
+          <div className="ch-nav-actions">
+            <Link to="/admin" className="ch-staff-link ch-hide-mobile">Staff Portal</Link>
+
+            {user ? (
+              <div className="ch-user-action-wrap">
+                {user.role === 'Guest' && (
+                  <Link
+                    to="/guest-dashboard"
+                    className="ch-staff-link ch-hide-mobile"
+                    style={{ color: 'var(--ch-green)', fontWeight: 700 }}
+                  >
+                    My Bookings
+                  </Link>
+                )}
+                <div className="ch-user-text ch-hide-mobile" style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--ch-text-dark)' }}>
+                    {user.name}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--ch-green)', fontWeight: 600 }}>
+                    {user.role}
+                  </div>
+                </div>
+                <button
+                  onClick={logout}
+                  title="Logout"
+                  className="ch-btn-logout-icon"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--ch-border)',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: 'var(--ch-text-secondary)',
+                    flexShrink: 0
+                  }}
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="ch-btn-signin ch-desktop-signin">
+                Sign in
+              </Link>
+            )}
+
+            {/* Mobile hamburger */}
+            <button
+              className="ch-mobile-menu-btn"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open navigation menu"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <line x1="3" y1="6"  x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Mobile fullscreen nav overlay ── */}
+      <nav className={`ch-mobile-nav ${mobileOpen ? 'open' : ''}`}>
+        {/* Close button */}
+        <button
+          className="ch-mobile-nav-close"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <line x1="18" y1="6"  x2="6"  y2="18"/>
+            <line x1="6"  y1="6"  x2="18" y2="18"/>
+          </svg>
+        </button>
+
+        {/* Brand badge */}
+        <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+          <div style={{
+            fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em',
+            color: 'var(--ch-green)', textTransform: 'uppercase', marginBottom: '6px'
+          }}>
+            CareHaven Hotel
+          </div>
+          <div style={{ width: '40px', height: '2px', background: 'var(--ch-gold)', margin: '0 auto' }} />
+        </div>
+
+        {/* Mobile Logged-in User Card */}
+        {user && (
+          <div className="ch-mobile-user-card">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '38px', height: '38px', borderRadius: '50%',
+                background: 'var(--ch-green)', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 700, fontSize: '0.95rem'
+              }}>
+                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: 700, color: 'var(--ch-text-dark)', fontSize: '0.95rem' }}>{user.name}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ch-green)', fontWeight: 600 }}>{user.role} Account</div>
+              </div>
+            </div>
+            {user.role === 'Guest' && (
+              <Link
+                to="/guest-dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="btn btn-secondary"
+                style={{
+                  width: '100%',
+                  marginTop: '10px',
+                  padding: '8px 14px',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  color: 'var(--ch-green)',
+                  borderColor: 'var(--ch-green)'
+                }}
+              >
+                View My Reservations
+              </Link>
+            )}
+          </div>
+        )}
+
+        <div className="ch-mobile-links-group">
+          <a href="#about"    className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>About</a>
+          <a href="#location" className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>Location</a>
+          <a href="#gallery"  className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>Gallery</a>
+          <a href="#rooms"    className="ch-mobile-nav-link" onClick={() => setMobileOpen(false)}>Book Rooms</a>
+        </div>
+
+        <div className="ch-mobile-actions-group">
+          <Link to="/admin" className="ch-mobile-staff-btn" onClick={() => setMobileOpen(false)}>
+            Staff Portal
+          </Link>
+          {user ? (
+            <button
+              onClick={() => { logout(); setMobileOpen(false); }}
+              className="ch-mobile-logout-btn"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="ch-btn-signin"
+              onClick={() => setMobileOpen(false)}
+              style={{ width: '100%', padding: '12px 32px', fontSize: '1rem', textAlign: 'center' }}
+            >
+              Sign In
+            </Link>
+          )}
+        </div>
+      </nav>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────
+   Main Navbar export
+   ───────────────────────────────────────────────────── */
 export default function Navbar() {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isAdminPanel = location.pathname.startsWith('/admin');
 
@@ -26,205 +237,5 @@ export default function Navbar() {
     return null; // Left Sidebar is rendered instead for Admin & Staff Panel
   }
 
-  const scrollToSection = (id) => {
-    setMobileMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  return (
-    <header style={{
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      padding: '12px 16px',
-      background: '#ffffff',
-      borderBottom: '1px solid #e2e8f0',
-      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
-    }}>
-      <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto' }}>
-        {/* Brand Logo */}
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '10px',
-            background: 'var(--accent-gradient)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)'
-          }}>
-            <Building2 size={22} />
-          </div>
-          <div>
-            <div style={{ fontSize: '1.2rem', fontWeight: '800', letterSpacing: '-0.02em', color: '#0f172a', lineHeight: 1.1 }}>
-              Care<span className="text-gradient">Haven</span> Hotel
-            </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Luxury Resort & Suites
-            </div>
-          </div>
-        </Link>
-
-        {/* Desktop Public Navigation Links */}
-        <nav className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <button 
-            onClick={() => scrollToSection('about-hotel')} 
-            className="btn btn-secondary" 
-            style={{ border: 'none', background: 'transparent' }}
-          >
-            <Info size={15} /> About
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('hotel-gallery')} 
-            className="btn btn-secondary" 
-            style={{ border: 'none', background: 'transparent' }}
-          >
-            <Image size={15} /> Gallery
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('hotel-location')} 
-            className="btn btn-secondary" 
-            style={{ border: 'none', background: 'transparent' }}
-          >
-            <MapPin size={15} /> Location
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('search-rooms')} 
-            className="btn btn-secondary"
-            style={{ background: 'rgba(5, 150, 105, 0.08)', borderColor: 'rgba(5, 150, 105, 0.2)', color: 'var(--accent-primary)', fontWeight: '700' }}
-          >
-            <Globe size={15} /> Book Rooms
-          </button>
-
-          {user && user.role === 'Guest' && (
-            <Link to="/guest-dashboard" className="btn btn-secondary">
-              <Calendar size={15} /> My Reservations
-            </Link>
-          )}
-        </nav>
-
-        {/* Desktop User Account Menu / Staff Portal Switcher */}
-        <div className="desktop-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Link to="/admin" className="btn btn-secondary" style={{ background: 'rgba(217, 119, 6, 0.08)', borderColor: 'rgba(217, 119, 6, 0.2)', color: '#d97706', fontSize: '0.85rem' }}>
-            <ShieldAlert size={15} /> Staff Portal
-          </Link>
-
-          {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#0f172a' }}>{user.name}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: '600' }}>{user.role}</div>
-              </div>
-              <button className="btn btn-secondary" onClick={logout} title="Logout" style={{ padding: '8px 12px' }}>
-                <LogOut size={15} />
-              </button>
-            </div>
-          ) : (
-            <Link to="/login" className="btn btn-primary" style={{ fontSize: '0.85rem' }}>
-              <LogIn size={15} /> Sign In
-            </Link>
-          )}
-        </div>
-
-        {/* Mobile Hamburger Toggle Button */}
-        <button 
-          className="mobile-nav-toggle"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          style={{
-            display: 'none',
-            background: 'transparent',
-            border: 'none',
-            color: '#0f172a',
-            padding: '6px',
-            cursor: 'pointer'
-          }}
-        >
-          {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="mobile-dropdown-menu" style={{
-          padding: '16px 0 8px 0',
-          borderTop: '1px solid #e2e8f0',
-          marginTop: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
-        }}>
-          <button 
-            onClick={() => scrollToSection('about-hotel')} 
-            className="btn btn-secondary" 
-            style={{ width: '100%', justifyContent: 'flex-start' }}
-          >
-            <Info size={15} /> About
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('hotel-gallery')} 
-            className="btn btn-secondary" 
-            style={{ width: '100%', justifyContent: 'flex-start' }}
-          >
-            <Image size={15} /> Gallery
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('hotel-location')} 
-            className="btn btn-secondary" 
-            style={{ width: '100%', justifyContent: 'flex-start' }}
-          >
-            <MapPin size={15} /> Location
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('search-rooms')} 
-            className="btn btn-primary"
-            style={{ width: '100%', justifyContent: 'flex-start' }}
-          >
-            <Globe size={15} /> Book Rooms
-          </button>
-
-          {user && user.role === 'Guest' && (
-            <Link to="/guest-dashboard" onClick={() => setMobileMenuOpen(false)} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'flex-start' }}>
-              <Calendar size={15} /> My Reservations
-            </Link>
-          )}
-
-          <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'flex-start', color: '#d97706', background: 'rgba(217, 119, 6, 0.08)' }}>
-            <ShieldAlert size={15} /> Staff Portal
-          </Link>
-
-          {user ? (
-            <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'flex-start', color: '#e11d48' }}>
-              <LogOut size={15} /> Sign Out ({user.name})
-            </button>
-          ) : (
-            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-              <LogIn size={15} /> Sign In
-            </Link>
-          )}
-        </div>
-      )}
-
-      <style>{`
-        @media (max-width: 900px) {
-          .desktop-nav, .desktop-actions {
-            display: none !important;
-          }
-          .mobile-nav-toggle {
-            display: block !important;
-          }
-        }
-      `}</style>
-    </header>
-  );
+  return <GuestNavbar user={user} logout={logout} location={location} />;
 }
