@@ -79,11 +79,11 @@ export const mockData = {
   ],
 
   rooms: [
-    { _id: '65b000000000000000000101', roomNumber: '101', roomType: { _id: '65a000000000000000000001', name: 'Boutique Deluxe Single', basePrice: 140 }, floor: 1, status: 'Reserved', cleaningStatus: 'Clean' },
-    { _id: '65b000000000000000000102', roomNumber: '102', roomType: { _id: '65a000000000000000000001', name: 'Boutique Deluxe Single', basePrice: 140 }, floor: 1, status: 'Available', cleaningStatus: 'Clean' },
-    { _id: '65b000000000000000000201', roomNumber: '201', roomType: { _id: '65a000000000000000000002', name: 'Executive King Deluxe', basePrice: 220 }, floor: 2, status: 'Occupied', cleaningStatus: 'Clean' },
-    { _id: '65b000000000000000000202', roomNumber: '202', roomType: { _id: '65a000000000000000000002', name: 'Executive King Deluxe', basePrice: 220 }, floor: 2, status: 'Available', cleaningStatus: 'Dirty' },
-    { _id: '65b000000000000000000301', roomNumber: '301', roomType: { _id: '65a000000000000000000003', name: 'Presidential Ocean Suite', basePrice: 450 }, floor: 3, status: 'Available', cleaningStatus: 'Clean' }
+    { _id: '65b000000000000000000101', roomNumber: '101', roomType: { _id: '65a000000000000000000001', name: 'Boutique Deluxe Single', basePrice: 140, capacity: 1, description: 'Cozy modern boutique room with queen bed, high-speed Wi-Fi, ambient warm lighting, and city view.', photos: ['/boutique_single.png'] }, floor: 1, status: 'Reserved', cleaningStatus: 'Clean' },
+    { _id: '65b000000000000000000102', roomNumber: '102', roomType: { _id: '65a000000000000000000001', name: 'Boutique Deluxe Single', basePrice: 140, capacity: 1, description: 'Cozy modern boutique room with queen bed, high-speed Wi-Fi, ambient warm lighting, and city view.', photos: ['/boutique_single.png'] }, floor: 1, status: 'Available', cleaningStatus: 'Clean' },
+    { _id: '65b000000000000000000201', roomNumber: '201', roomType: { _id: '65a000000000000000000002', name: 'Executive King Deluxe', basePrice: 220, capacity: 2, description: 'Spacious double suite featuring king size bed, custom marble bathroom, executive desk, and rainfall shower.', photos: ['/executive_king_deluxe.jpg'] }, floor: 2, status: 'Occupied', cleaningStatus: 'Clean' },
+    { _id: '65b000000000000000000202', roomNumber: '202', roomType: { _id: '65a000000000000000000002', name: 'Executive King Deluxe', basePrice: 220, capacity: 2, description: 'Spacious double suite featuring king size bed, custom marble bathroom, executive desk, and rainfall shower.', photos: ['/executive_king_deluxe.jpg'] }, floor: 2, status: 'Available', cleaningStatus: 'Dirty' },
+    { _id: '65b000000000000000000301', roomNumber: '301', roomType: { _id: '65a000000000000000000003', name: 'Presidential Ocean Suite', basePrice: 450, capacity: 4, description: 'Opulent suite with private ocean view balcony, living lounge, master king bed, jacuzzi, and 24/7 room service.', photos: ['/luxury_suite.png'] }, floor: 3, status: 'Available', cleaningStatus: 'Clean' }
   ],
 
   guests: [
