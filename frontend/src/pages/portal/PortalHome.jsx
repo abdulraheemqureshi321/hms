@@ -384,13 +384,10 @@ export default function PortalHome() {
                 <div key={room._id || index} className="ch-room-card">
                   {/* Card Image */}
                   <div className="ch-room-image-wrapper">
-                    <img 
-                      src={photo} 
-                      alt={title} 
-                      className="ch-room-img"
-                      loading="lazy"
-                      srcSet={`${photo.replace(/\.(jpg|png)$/, '-400.webp')} 400w, ${photo.replace(/\.(jpg|png)$/, '-800.webp')} 800w, ${photo} 1200w`}
-                    />
+                    <picture>
+                      <source srcSet={photo.replace(/\.(jpg|png)$/i, '.webp')} type="image/webp" />
+                      <img src={photo} alt={title} className="ch-room-img" loading="lazy" />
+                    </picture>
                   </div>
 
                   {/* Card Body */}
@@ -516,7 +513,10 @@ export default function PortalHome() {
               className="ch-gallery-card"
               onClick={() => setLightboxImage(item)}
             >
-              <img src={item.img} alt={item.title} className="ch-gallery-img" loading="lazy" srcSet={`${item.img.replace(/\.(jpg|png)$/, '-400.webp')} 400w, ${item.img.replace(/\.(jpg|png)$/, '-800.webp')} 800w, ${item.img} 1200w`} />
+              <picture>
+        <source srcSet={item.img.replace(/\.(jpg|png)$/i, '.webp')} type="image/webp" />
+        <img src={item.img} alt={item.title} className="ch-gallery-img" loading="lazy" />
+      </picture>
               <div className="ch-gallery-overlay">
                 <h4 className="ch-gallery-title">{item.title}</h4>
                 <span className="ch-gallery-sub">{item.subtitle}</span>
