@@ -388,6 +388,8 @@ export default function PortalHome() {
                       src={photo} 
                       alt={title} 
                       className="ch-room-img"
+                      loading="lazy"
+                      srcSet={`${photo.replace(/\.(jpg|png)$/, '-400.webp')} 400w, ${photo.replace(/\.(jpg|png)$/, '-800.webp')} 800w, ${photo} 1200w`}
                     />
                   </div>
 
@@ -514,7 +516,7 @@ export default function PortalHome() {
               className="ch-gallery-card"
               onClick={() => setLightboxImage(item)}
             >
-              <img src={item.img} alt={item.title} className="ch-gallery-img" />
+              <img src={item.img} alt={item.title} className="ch-gallery-img" loading="lazy" srcSet={`${item.img.replace(/\.(jpg|png)$/, '-400.webp')} 400w, ${item.img.replace(/\.(jpg|png)$/, '-800.webp')} 800w, ${item.img} 1200w`} />
               <div className="ch-gallery-overlay">
                 <h4 className="ch-gallery-title">{item.title}</h4>
                 <span className="ch-gallery-sub">{item.subtitle}</span>
