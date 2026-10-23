@@ -142,17 +142,18 @@ export default function RoomManagement() {
   };
 
   return (
-    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
-      <div className="responsive-header">
+    <div className="container" style={{ padding: '28px 24px', maxWidth: '1380px' }}>
+      <div className="responsive-header" style={{ marginBottom: '20px' }}>
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
-            Room & <span className="text-gradient">Category Inventory</span>
+          <div className="page-eyebrow">Property Configuration</div>
+          <h1 style={{ fontSize: '1.45rem', fontWeight: 600, color: '#09090b', letterSpacing: '-0.025em' }}>
+            Rooms & Categories
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
-            Manage room numbers, dynamic pricing tiers, capacity limits, and photo galleries
+          <p style={{ color: '#71717a', fontSize: '0.84rem', marginTop: '2px' }}>
+            Inventory of room keys, pricing tiers, guest capacity, and amenities
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button 
             className="btn btn-secondary" 
             onClick={() => {
@@ -165,47 +166,49 @@ export default function RoomManagement() {
               setUploadedPhotos([]);
               setShowTypeModal(true);
             }}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ fontSize: '0.82rem', padding: '7px 12px' }}
           >
-            <Plus size={18} /> New Room Category
+            <Plus size={14} /> New Category
           </button>
           <button 
             className="btn btn-primary" 
             onClick={() => setShowRoomModal(true)}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ fontSize: '0.82rem', padding: '7px 14px' }}
           >
-            <BedDouble size={18} /> Add Room Number
+            <BedDouble size={14} /> Add Room Number
           </button>
         </div>
       </div>
 
       {/* Room Categories Summary Cards */}
-      <div className="grid-cols-3" style={{ gap: '20px', marginBottom: '32px' }}>
+      <div className="grid-cols-3" style={{ gap: '14px', marginBottom: '24px' }}>
         {roomTypes.map((type) => (
-          <div key={type._id} className="glass-panel" style={{ padding: '24px', position: 'relative' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-              <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a' }}>{type.name}</h3>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Capacity: {type.capacity} Guests</span>
+          <div key={type._id} className="glass-panel" style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#09090b', letterSpacing: '-0.01em' }}>{type.name}</h3>
+                  <span style={{ fontSize: '0.76rem', color: '#71717a' }}>Max {type.capacity} Guests</span>
+                </div>
+                <div className="font-mono" style={{ fontSize: '1.15rem', fontWeight: 600, color: '#09090b' }}>
+                  ${type.basePrice}<span style={{ fontSize: '0.72rem', fontWeight: 400, color: '#a1a1aa' }}>/nt</span>
+                </div>
               </div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--accent-primary)' }}>
-                ${type.basePrice}<span style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-muted)' }}>/night</span>
+              
+              <p style={{ color: '#52525b', fontSize: '0.8rem', marginBottom: '12px', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {type.description || 'Furnished guest room with modern hotel amenities.'}
+              </p>
+
+              <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '14px' }}>
+                {type.amenities?.map((a, i) => (
+                  <span key={i} style={{ fontSize: '0.7rem', background: '#f4f4f5', padding: '2px 7px', borderRadius: '4px', color: '#52525b' }}>
+                    {a}
+                  </span>
+                ))}
               </div>
             </div>
-            
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '16px', lineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-              {type.description || 'Spacious, elegantly furnished guest room featuring modern amenities and room service.'}
-            </p>
 
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-              {type.amenities?.map((a, i) => (
-                <span key={i} style={{ fontSize: '0.75rem', background: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', color: '#475569' }}>
-                  {a}
-                </span>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '8px', borderTop: '1px solid #f4f4f5' }}>
               <button 
                 className="btn btn-secondary" 
                 onClick={() => {
@@ -218,9 +221,9 @@ export default function RoomManagement() {
                   setUploadedPhotos(type.photos || []);
                   setShowTypeModal(true);
                 }}
-                style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                style={{ padding: '4px 10px', fontSize: '0.76rem' }}
               >
-                <Edit3 size={14} style={{ marginRight: '6px' }} /> Edit Category
+                <Edit3 size={12} style={{ marginRight: '4px' }} /> Edit Category
               </button>
             </div>
           </div>
@@ -229,62 +232,75 @@ export default function RoomManagement() {
 
       {/* Room Table */}
       {loading ? (
-        <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading Rooms...</div>
+        <div style={{ padding: '40px', textAlign: 'center', color: '#a1a1aa', fontSize: '0.85rem' }}>Loading Rooms...</div>
       ) : (
         <div className="table-responsive">
-          <table className="glass-panel" style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table>
             <thead>
-              <tr style={{ background: 'var(--bg-dark)', borderBottom: '1px solid var(--border-light)' }}>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ROOM #</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>FLOOR</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>CATEGORY</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>NIGHTLY RATE</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>OPERATIONAL STATUS</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>CLEANING STATUS</th>
-                <th style={{ padding: '16px', textAlign: 'right', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ACTIONS</th>
+              <tr>
+                <th>Room Number</th>
+                <th>Floor</th>
+                <th>Category</th>
+                <th>Rate / Night</th>
+                <th>Occupancy Status</th>
+                <th>Housekeeping</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {rooms.map((room) => (
-                <tr key={room._id} style={{ borderBottom: '1px solid var(--border-light)' }}>
-                  <td style={{ padding: '16px', fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>Room {room.roomNumber}</td>
-                  <td style={{ padding: '16px' }}>Floor {room.floor}</td>
-                  <td style={{ padding: '16px', fontWeight: 600 }}>{room.roomType?.name || 'Standard'}</td>
-                  <td style={{ padding: '16px', fontWeight: 700, color: 'var(--accent-primary)' }}>
-                    ${room.roomType?.basePrice || 150}
-                  </td>
-                  <td style={{ padding: '16px' }}>
-                    <span className={`badge ${
-                      room.status === 'Available' ? 'badge-available' : 
-                      room.status === 'Occupied' ? 'badge-occupied' : 
-                      room.status === 'Reserved' ? 'badge-reserved' : 'badge-maintenance'
-                    }`}>
-                      {room.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '16px' }}>
-                    <span style={{
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      padding: '4px 10px',
-                      borderRadius: '20px',
-                      background: room.cleaningStatus === 'Clean' ? '#d1fae5' : room.cleaningStatus === 'Dirty' ? '#fee2e2' : '#fef3c7',
-                      color: room.cleaningStatus === 'Clean' ? '#065f46' : room.cleaningStatus === 'Dirty' ? '#991b1b' : '#92400e'
-                    }}>
-                      {room.cleaningStatus}
-                    </span>
-                  </td>
-                  <td style={{ padding: '16px', textAlign: 'right' }}>
-                    <button 
-                      className="btn btn-secondary" 
-                      onClick={() => handleDeleteRoom(room._id)}
-                      style={{ padding: '6px 12px', color: '#ef4444', borderColor: '#fca5a5' }}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {rooms.map((room) => {
+                const getStatusPill = (st) => {
+                  switch (st) {
+                    case 'Available': return { bg: '#f0fdf4', color: '#166534', dot: '#16a34a' };
+                    case 'Occupied': return { bg: '#fef2f2', color: '#991b1b', dot: '#dc2626' };
+                    case 'Reserved': return { bg: '#fffbeb', color: '#92400e', dot: '#d97706' };
+                    default: return { bg: '#f4f4f5', color: '#52525b', dot: '#71717a' };
+                  }
+                };
+                const getCleanPill = (cl) => {
+                  switch (cl) {
+                    case 'Clean': return { bg: '#f0fdf4', color: '#166534', label: 'Clean / Ready' };
+                    case 'Dirty': return { bg: '#fef2f2', color: '#991b1b', label: 'Dirty' };
+                    default: return { bg: '#fffbeb', color: '#92400e', label: 'In Progress' };
+                  }
+                };
+                const sPill = getStatusPill(room.status);
+                const cPill = getCleanPill(room.cleaningStatus);
+
+                return (
+                  <tr key={room._id}>
+                    <td className="font-mono" style={{ fontWeight: 600, color: '#09090b' }}>
+                      Room {room.roomNumber}
+                    </td>
+                    <td style={{ color: '#52525b' }}>Floor {room.floor}</td>
+                    <td style={{ fontWeight: 500, color: '#09090b' }}>{room.roomType?.name || 'Standard'}</td>
+                    <td className="font-mono" style={{ fontWeight: 600, color: '#09090b' }}>
+                      ${room.roomType?.basePrice || 150}
+                    </td>
+                    <td>
+                      <span className="status-pill" style={{ background: sPill.bg, color: sPill.color, border: '1px solid rgba(0,0,0,0.04)' }}>
+                        <span className="status-dot" style={{ background: sPill.dot }} />
+                        {room.status}
+                      </span>
+                    </td>
+                    <td>
+                      <span style={{ fontSize: '0.74rem', fontWeight: 500, padding: '3px 8px', borderRadius: '4px', background: cPill.bg, color: cPill.color }}>
+                        {cPill.label}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button 
+                        className="btn btn-secondary" 
+                        onClick={() => handleDeleteRoom(room._id)}
+                        style={{ padding: '4px 8px', color: '#991b1b', borderColor: '#fecaca' }}
+                        title="Delete Room"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

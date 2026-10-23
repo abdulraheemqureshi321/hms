@@ -156,46 +156,45 @@ export default function BillingManagement() {
   };
 
   return (
-    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
+    <div className="container" style={{ padding: '28px 24px', maxWidth: '1380px' }}>
       {/* Header */}
-      <div className="responsive-header">
+      <div className="responsive-header" style={{ marginBottom: '20px' }}>
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
-            Billing & <span className="text-gradient">Invoicing Engine</span>
+          <div className="page-eyebrow">Financial Operations</div>
+          <h1 style={{ fontSize: '1.45rem', fontWeight: 600, color: '#09090b', letterSpacing: '-0.025em' }}>
+            Invoicing & Billing
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
-            Automated itemized invoice calculation with real-time tax breakdown & audit log
+          <p style={{ color: '#71717a', fontSize: '0.84rem', marginTop: '2px' }}>
+            Guest settlement ledger, automated itemized tax breakdowns, and payment records
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button 
             className="btn btn-secondary" 
             onClick={() => setShowTaxModal(true)}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ fontSize: '0.82rem', padding: '7px 12px' }}
           >
-            <Settings size={18} /> Tax & Rates Config
+            <Settings size={14} /> Tax & Rates Config
           </button>
         </div>
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', marginBottom: '20px', border: '1px solid #e2e8f0', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
-          <div style={{ position: 'relative', minWidth: '240px', flex: 1 }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+      <div className="glass-panel" style={{ padding: '12px 14px', marginBottom: '16px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
+          <div style={{ position: 'relative', minWidth: '220px', flex: 1 }}>
+            <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
             <input
               type="text"
-              className="input-field"
-              style={{ paddingLeft: '38px', height: '40px', fontSize: '0.85rem' }}
-              placeholder="Search by Invoice Code, Guest Name, Room #..."
+              style={{ width: '100%', paddingLeft: '32px', height: '36px', fontSize: '0.82rem', background: '#fafafa', border: '1px solid #e4e4e7', borderRadius: '6px' }}
+              placeholder="Search invoice, guest, room #..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           <select
-            className="input-field"
-            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 10px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px', color: '#09090b' }}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -206,8 +205,7 @@ export default function BillingManagement() {
           </select>
 
           <select
-            className="input-field"
-            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 10px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px', color: '#09090b' }}
             value={methodFilter}
             onChange={(e) => setMethodFilter(e.target.value)}
           >
@@ -219,22 +217,20 @@ export default function BillingManagement() {
           </select>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>From:</span>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>From:</span>
             <input
               type="date"
-              className="input-field"
-              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 8px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px' }}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>To:</span>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>To:</span>
             <input
               type="date"
-              className="input-field"
-              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 8px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px' }}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
@@ -249,7 +245,8 @@ export default function BillingManagement() {
                 setStartDate('');
                 setEndDate('');
               }}
-              style={{ fontSize: '0.8rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: '0 6px' }}
+              className="btn btn-secondary"
+              style={{ height: '36px', padding: '0 10px', fontSize: '0.78rem', color: '#71717a' }}
             >
               Reset Filters
             </button>
@@ -259,73 +256,98 @@ export default function BillingManagement() {
         <button
           onClick={handleExportExcel}
           className="btn btn-secondary"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px', padding: '0 16px', background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0', fontWeight: 700 }}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px', padding: '0 12px', fontSize: '0.8rem' }}
         >
-          <FileSpreadsheet size={18} /> Export Excel ({filteredInvoices.length})
+          <FileSpreadsheet size={15} /> Export Excel ({filteredInvoices.length})
         </button>
       </div>
 
       {loading ? (
-        <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading Invoices...</div>
+        <div style={{ padding: '40px', textAlign: 'center', color: '#a1a1aa', fontSize: '0.85rem' }}>Loading Invoices...</div>
       ) : (
         <div className="table-responsive">
-          <table className="glass-panel" style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table>
             <thead>
-              <tr style={{ background: 'var(--bg-dark)', borderBottom: '1px solid var(--border-light)' }}>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>INV CODE</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>GUEST NAME</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ROOM</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>SUBTOTAL</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>TAX & FEES</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>TOTAL</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontSize: '0.85rem', color: 'var(--text-muted)' }}>STATUS</th>
-                <th style={{ padding: '16px', textAlign: 'right', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ACTIONS</th>
+              <tr>
+                <th>Invoice / Code</th>
+                <th>Guest Name</th>
+                <th>Room</th>
+                <th>Subtotal</th>
+                <th>Taxes & Fees</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredInvoices.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '36px', color: '#a1a1aa' }}>
                     No invoices found matching selected filters.
                   </td>
                 </tr>
               ) : (
-                filteredInvoices.map((inv) => (
-                <tr key={inv._id} style={{ borderBottom: '1px solid var(--border-light)' }}>
-                  <td style={{ padding: '16px', fontWeight: 600 }}>{inv.booking?.bookingCode || 'N/A'}</td>
-                  <td style={{ padding: '16px' }}>{inv.booking?.guest?.name || 'Walk-in Guest'}</td>
-                  <td style={{ padding: '16px' }}>Room {inv.booking?.room?.roomNumber || 'N/A'}</td>
-                  <td style={{ padding: '16px' }}>${(inv.amount - (inv.taxAmount || 0)).toLocaleString()}</td>
-                  <td style={{ padding: '16px' }}>${(inv.taxAmount || 0).toLocaleString()}</td>
-                  <td style={{ padding: '16px', fontWeight: 700, color: 'var(--accent-primary)' }}>${inv.amount?.toLocaleString()}</td>
-                  <td style={{ padding: '16px' }}>
-                    <span className={`badge ${inv.paymentStatus === 'Paid' ? 'badge-confirmed' : inv.paymentStatus === 'Refunded' ? 'badge-cancelled' : 'badge-pending'}`}>
-                      {inv.paymentStatus}
-                    </span>
-                  </td>
-                  <td style={{ padding: '16px', textAlign: 'right' }}>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                      <button 
-                        className="btn btn-secondary" 
-                        onClick={() => setSelectedInvoice(inv)}
-                        style={{ padding: '6px 12px', fontSize: '0.85rem' }}
-                      >
-                        <Printer size={14} style={{ marginRight: '6px' }} /> View Invoice
-                      </button>
+                filteredInvoices.map((inv) => {
+                  const getStatusStyle = (s) => {
+                    switch (s) {
+                      case 'Paid': return { bg: '#f0fdf4', color: '#166534', dot: '#16a34a' };
+                      case 'Refunded': return { bg: '#fef2f2', color: '#991b1b', dot: '#ef4444' };
+                      default: return { bg: '#fffbeb', color: '#92400e', dot: '#d97706' };
+                    }
+                  };
+                  const sStyle = getStatusStyle(inv.paymentStatus);
 
-                      {inv.paymentStatus !== 'Paid' && (
-                        <button 
-                          className="btn btn-primary" 
-                          onClick={() => handlePay(inv._id)}
-                          style={{ padding: '6px 12px', fontSize: '0.85rem' }}
-                        >
-                          <CreditCard size={14} style={{ marginRight: '6px' }} /> Mark Paid
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )))}
+                  return (
+                    <tr key={inv._id}>
+                      <td className="font-mono" style={{ fontWeight: 600, color: '#09090b', whiteSpace: 'nowrap' }}>
+                        {inv.booking?.bookingCode || 'N/A'}
+                      </td>
+                      <td style={{ fontWeight: 500, color: '#09090b' }}>
+                        {inv.booking?.guest?.name || 'Walk-in Guest'}
+                      </td>
+                      <td className="font-mono" style={{ color: '#52525b' }}>
+                        Room {inv.booking?.room?.roomNumber || 'N/A'}
+                      </td>
+                      <td className="font-mono" style={{ color: '#52525b' }}>
+                        ${(inv.amount - (inv.taxAmount || 0)).toLocaleString()}
+                      </td>
+                      <td className="font-mono" style={{ color: '#71717a' }}>
+                        ${(inv.taxAmount || 0).toLocaleString()}
+                      </td>
+                      <td className="font-mono" style={{ fontWeight: 600, color: '#09090b' }}>
+                        ${inv.amount?.toLocaleString()}
+                      </td>
+                      <td>
+                        <span className="status-pill" style={{ background: sStyle.bg, color: sStyle.color, border: '1px solid rgba(0,0,0,0.04)' }}>
+                          <span className="status-dot" style={{ background: sStyle.dot }} />
+                          {inv.paymentStatus}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
+                          <button 
+                            className="btn btn-secondary" 
+                            onClick={() => setSelectedInvoice(inv)}
+                            style={{ padding: '4px 8px', fontSize: '0.74rem' }}
+                          >
+                            <Printer size={12} style={{ marginRight: '4px' }} /> View
+                          </button>
+
+                          {inv.paymentStatus !== 'Paid' && (
+                            <button 
+                              className="btn btn-primary" 
+                              onClick={() => handlePay(inv._id)}
+                              style={{ padding: '4px 8px', fontSize: '0.74rem' }}
+                            >
+                              <CreditCard size={12} style={{ marginRight: '4px' }} /> Pay
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

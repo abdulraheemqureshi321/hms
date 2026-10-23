@@ -234,41 +234,40 @@ export default function BookingManagement() {
   const { hasPermission } = useAuth();
 
   return (
-    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
-      <div className="responsive-header">
+    <div className="container" style={{ padding: '28px 24px', maxWidth: '1380px' }}>
+      <div className="responsive-header" style={{ marginBottom: '20px' }}>
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
-            Unified <span className="text-gradient">Booking & Reservation Manager</span>
+          <div className="page-eyebrow">Front Desk & Reservations</div>
+          <h1 style={{ fontSize: '1.45rem', fontWeight: 600, color: '#09090b', letterSpacing: '-0.025em' }}>
+            Bookings
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
-            Real-time reservations sync across online portal, walk-ins, guest ID uploads, and multi-guest details
+          <p style={{ color: '#71717a', fontSize: '0.84rem', marginTop: '2px' }}>
+            Reservation ledger across online portal, walk-ins, and direct front-desk registrations
           </p>
         </div>
         {hasPermission('bookings', 'create') && (
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <Plus size={16} /> New Front-Desk Reservation
+          <button className="btn btn-primary" onClick={() => setShowModal(true)} style={{ fontSize: '0.82rem', padding: '8px 14px' }}>
+            <Plus size={15} /> New Walk-In Booking
           </button>
         )}
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', marginBottom: '20px', border: '1px solid #e2e8f0', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
-          <div style={{ position: 'relative', minWidth: '240px', flex: 1 }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+      <div className="glass-panel" style={{ padding: '12px 14px', marginBottom: '16px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
+          <div style={{ position: 'relative', minWidth: '220px', flex: 1 }}>
+            <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
             <input
               type="text"
-              className="input-field"
-              style={{ paddingLeft: '38px', height: '40px', fontSize: '0.85rem' }}
-              placeholder="Search by Booking Code, Guest Name, Room #..."
+              style={{ width: '100%', paddingLeft: '32px', height: '36px', fontSize: '0.82rem', background: '#fafafa', border: '1px solid #e4e4e7', borderRadius: '6px' }}
+              placeholder="Search code, guest name, room #..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           <select
-            className="input-field"
-            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 10px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px', color: '#09090b' }}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -281,34 +280,31 @@ export default function BookingManagement() {
           </select>
 
           <select
-            className="input-field"
-            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 10px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px', color: '#09090b' }}
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
           >
-            <option value="All">All Sources</option>
+            <option value="All">All Channels</option>
             <option value="portal">Online Portal</option>
             <option value="walk-in">Walk-in</option>
-            <option value="phone">Phone Reservation</option>
+            <option value="phone">Phone Booking</option>
           </select>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>From:</span>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>From:</span>
             <input
               type="date"
-              className="input-field"
-              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 8px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px' }}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>To:</span>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>To:</span>
             <input
               type="date"
-              className="input-field"
-              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 8px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px' }}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
@@ -323,7 +319,8 @@ export default function BookingManagement() {
                 setStartDate('');
                 setEndDate('');
               }}
-              style={{ fontSize: '0.8rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: '0 6px' }}
+              className="btn btn-secondary"
+              style={{ height: '36px', padding: '0 10px', fontSize: '0.78rem', color: '#71717a' }}
             >
               Reset Filters
             </button>
@@ -333,124 +330,151 @@ export default function BookingManagement() {
         <button
           onClick={handleExportExcel}
           className="btn btn-secondary"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px', padding: '0 16px', background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0', fontWeight: 700 }}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px', padding: '0 12px', fontSize: '0.8rem' }}
         >
-          <FileSpreadsheet size={18} /> Export Excel ({filteredBookings.length})
+          <FileSpreadsheet size={15} /> Export Excel ({filteredBookings.length})
         </button>
       </div>
 
       {/* Bookings List */}
-      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <div className="table-responsive">
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-                <th style={{ padding: '12px' }}>BOOKING CODE</th>
-                <th style={{ padding: '12px' }}>PRIMARY GUEST & ID</th>
-                <th style={{ padding: '12px' }}>GUESTS STAYING</th>
-                <th style={{ padding: '12px' }}>ROOM ASSIGNED</th>
-                <th style={{ padding: '12px' }}>DATES</th>
-                <th style={{ padding: '12px' }}>TOTAL PRICE</th>
-                <th style={{ padding: '12px' }}>STATUS</th>
-                <th style={{ padding: '12px' }}>ACTIONS</th>
+      {/* Bookings Table */}
+      <div className="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Booking Code</th>
+              <th>Primary Guest & Contact</th>
+              <th>Guests</th>
+              <th>Room</th>
+              <th>Dates</th>
+              <th>Total Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredBookings.length === 0 ? (
+              <tr>
+                <td colSpan={8} style={{ textAlign: 'center', padding: '36px', color: '#a1a1aa' }}>
+                  No reservations found matching the selected filters.
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredBookings.length === 0 ? (
-                <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                    No bookings found matching selected filters.
-                  </td>
-                </tr>
-              ) : (
-                filteredBookings.map(b => (
-                <tr key={b._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                  <td style={{ padding: '14px 12px', fontWeight: '700', color: 'var(--accent-primary)' }}>
-                    {b.bookingCode}
-                  </td>
-                  <td style={{ padding: '14px 12px' }}>
-                    <div style={{ fontWeight: '700', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      {b.guest?.name || 'Walk-in Guest'}
-                      {b.guest?.idCardImage && (
-                        <span title="ID Card Uploaded" style={{ color: '#059669', fontSize: '0.75rem', background: 'rgba(5, 150, 105, 0.1)', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>
-                          ✓ ID Uploaded
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{b.guest?.email}</div>
-                    {b.guest?.idNumber && (
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                        {b.guest.idType || 'ID'}: {b.guest.idNumber}
+            ) : (
+              filteredBookings.map(b => {
+                const getStatusStyle = (s) => {
+                  switch (s) {
+                    case 'Confirmed': return { bg: '#f0fdf4', color: '#166534', dot: '#16a34a' };
+                    case 'Pending': return { bg: '#fffbeb', color: '#92400e', dot: '#d97706' };
+                    case 'Checked-In': return { bg: '#eff6ff', color: '#1e40af', dot: '#3b82f6' };
+                    case 'Checked-Out': return { bg: '#f4f4f5', color: '#52525b', dot: '#71717a' };
+                    case 'Cancelled': return { bg: '#fef2f2', color: '#991b1b', dot: '#ef4444' };
+                    default: return { bg: '#f4f4f5', color: '#52525b', dot: '#71717a' };
+                  }
+                };
+                const sStyle = getStatusStyle(b.status);
+
+                return (
+                  <tr key={b._id}>
+                    <td className="font-mono" style={{ fontWeight: 600, color: '#09090b', whiteSpace: 'nowrap' }}>
+                      {b.bookingCode}
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 600, color: '#09090b', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {b.guest?.name || 'Walk-in Guest'}
+                        {b.guest?.idCardImage && (
+                          <span title="ID Document Verified" style={{ color: '#166534', fontSize: '0.7rem', background: '#f0fdf4', padding: '1px 5px', borderRadius: '4px', border: '1px solid #bbf7d0' }}>
+                            ✓ ID
+                          </span>
+                        )}
                       </div>
-                    )}
-                  </td>
-                  <td style={{ padding: '14px 12px' }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '700', color: '#0f172a' }}>
-                      <Users size={14} color="var(--accent-primary)" />
-                      {b.guestsCount || 1} Person(s)
-                    </span>
-                  </td>
-                  <td style={{ padding: '14px 12px' }}>
-                    <span style={{ fontWeight: '700', color: '#0f172a' }}>Room {b.room?.roomNumber}</span>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{b.room?.roomType?.name}</div>
-                  </td>
-                  <td style={{ padding: '14px 12px', fontSize: '0.82rem', color: '#334155' }}>
-                    <div>In: {new Date(b.checkInDate).toLocaleDateString()}</div>
-                    <div>Out: {new Date(b.checkOutDate).toLocaleDateString()}</div>
-                  </td>
-                  <td style={{ padding: '14px 12px', fontWeight: '800', color: '#0f172a' }}>
-                    PKR {b.totalAmount}
-                  </td>
-                  <td style={{ padding: '14px 12px' }}>
-                    <span style={{
-                      padding: '4px 10px',
-                      borderRadius: '12px',
-                      fontSize: '0.75rem',
-                      fontWeight: '700',
-                      background: b.status === 'Confirmed' ? 'rgba(5, 150, 105, 0.1)' : b.status === 'Pending' ? 'rgba(217, 119, 6, 0.15)' : b.status === 'Checked-In' ? 'rgba(59, 130, 246, 0.1)' : b.status === 'Checked-Out' ? 'rgba(100, 116, 139, 0.1)' : 'rgba(225, 29, 72, 0.1)',
-                      color: b.status === 'Confirmed' ? '#059669' : b.status === 'Pending' ? '#d97706' : b.status === 'Checked-In' ? '#2563eb' : b.status === 'Checked-Out' ? '#64748b' : '#e11d48',
-                      border: b.status === 'Pending' ? '1px solid #fde68a' : 'none'
-                    }}>
-                      {b.status === 'Pending' ? 'Pending Approval' : b.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '14px 12px' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      <button className="btn btn-secondary" onClick={() => setViewBooking(b)} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                        <Eye size={12} /> Details
-                      </button>
-                      {hasPermission('bookings', 'edit') && b.status === 'Pending' && (
+                      <div style={{ fontSize: '0.78rem', color: '#71717a', marginTop: '1px' }}>{b.guest?.email}</div>
+                      {b.guest?.idNumber && (
+                        <div style={{ fontSize: '0.72rem', color: '#a1a1aa', marginTop: '1px' }}>
+                          {b.guest.idType || 'ID'}: {b.guest.idNumber}
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#52525b', fontSize: '0.82rem' }}>
+                        <Users size={13} style={{ color: '#71717a' }} />
+                        {b.guestsCount || 1}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="font-mono" style={{ fontWeight: 600, color: '#09090b' }}>
+                        Room {b.room?.roomNumber}
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: '#71717a' }}>
+                        {b.room?.roomType?.name}
+                      </div>
+                    </td>
+                    <td style={{ fontSize: '0.78rem', color: '#52525b', whiteSpace: 'nowrap' }}>
+                      <div>In: {new Date(b.checkInDate).toLocaleDateString()}</div>
+                      <div>Out: {new Date(b.checkOutDate).toLocaleDateString()}</div>
+                    </td>
+                    <td className="font-mono" style={{ fontWeight: 600, color: '#09090b', whiteSpace: 'nowrap' }}>
+                      PKR {b.totalAmount?.toLocaleString() || b.totalAmount}
+                    </td>
+                    <td>
+                      <span className="status-pill" style={{ background: sStyle.bg, color: sStyle.color, border: '1px solid rgba(0,0,0,0.04)' }}>
+                        <span className="status-dot" style={{ background: sStyle.dot }} />
+                        {b.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                         <button 
-                          className="btn btn-primary" 
-                          onClick={() => handleStatusUpdate(b._id, 'Confirmed')} 
-                          style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#059669', borderColor: '#059669', color: '#ffffff', fontWeight: '700' }}
-                          title="Approve and confirm guest reservation"
+                          className="btn btn-secondary" 
+                          onClick={() => setViewBooking(b)} 
+                          style={{ fontSize: '0.74rem', padding: '4px 8px', borderRadius: '5px' }}
                         >
-                          <CheckCircle size={12} /> Confirm
+                          <Eye size={12} /> Details
                         </button>
-                      )}
-                      {hasPermission('bookings', 'edit') && b.status === 'Confirmed' && (
-                        <button className="btn btn-secondary" onClick={() => handleStatusUpdate(b._id, 'Checked-In')} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                          Check In
-                        </button>
-                      )}
-                      {hasPermission('bookings', 'edit') && b.status === 'Checked-In' && (
-                        <button className="btn btn-secondary" onClick={() => handleStatusUpdate(b._id, 'Checked-Out')} style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
-                          Check Out
-                        </button>
-                      )}
-                      {(hasPermission('bookings', 'delete') || hasPermission('bookings', 'edit')) && b.status !== 'Cancelled' && b.status !== 'Checked-Out' && (
-                        <button className="btn btn-secondary" onClick={() => openCancelDialog(b)} style={{ fontSize: '0.75rem', padding: '4px 8px', color: '#dc2626' }}>
-                          {b.status === 'Pending' ? 'Decline' : 'Cancel'}
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )))}
-            </tbody>
-          </table>
-        </div>
+                        {hasPermission('bookings', 'edit') && b.status === 'Pending' && (
+                          <button 
+                            className="btn btn-primary" 
+                            onClick={() => handleStatusUpdate(b._id, 'Confirmed')} 
+                            style={{ fontSize: '0.74rem', padding: '4px 8px', borderRadius: '5px' }}
+                            title="Confirm reservation"
+                          >
+                            <CheckCircle size={12} /> Confirm
+                          </button>
+                        )}
+                        {hasPermission('bookings', 'edit') && b.status === 'Confirmed' && (
+                          <button 
+                            className="btn btn-secondary" 
+                            onClick={() => handleStatusUpdate(b._id, 'Checked-In')} 
+                            style={{ fontSize: '0.74rem', padding: '4px 8px', borderRadius: '5px' }}
+                          >
+                            Check In
+                          </button>
+                        )}
+                        {hasPermission('bookings', 'edit') && b.status === 'Checked-In' && (
+                          <button 
+                            className="btn btn-secondary" 
+                            onClick={() => handleStatusUpdate(b._id, 'Checked-Out')} 
+                            style={{ fontSize: '0.74rem', padding: '4px 8px', borderRadius: '5px' }}
+                          >
+                            Check Out
+                          </button>
+                        )}
+                        {(hasPermission('bookings', 'delete') || hasPermission('bookings', 'edit')) && b.status !== 'Cancelled' && b.status !== 'Checked-Out' && (
+                          <button 
+                            className="btn btn-secondary" 
+                            onClick={() => openCancelDialog(b)} 
+                            style={{ fontSize: '0.74rem', padding: '4px 8px', borderRadius: '5px', color: '#991b1b', borderColor: '#fecaca' }}
+                          >
+                            {b.status === 'Pending' ? 'Decline' : 'Cancel'}
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* Front-Desk Reservation Modal */}

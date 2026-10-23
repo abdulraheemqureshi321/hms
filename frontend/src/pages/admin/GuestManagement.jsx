@@ -84,36 +84,35 @@ export default function GuestManagement() {
   };
 
   return (
-    <div className="container" style={{ padding: '32px 16px', maxWidth: '1400px' }}>
-      <div className="responsive-header">
+    <div className="container" style={{ padding: '28px 24px', maxWidth: '1380px' }}>
+      <div className="responsive-header" style={{ marginBottom: '20px' }}>
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
-            Guest <span className="text-gradient">Directory & Profiles</span>
+          <div className="page-eyebrow">CRM & Guest Database</div>
+          <h1 style={{ fontSize: '1.45rem', fontWeight: 600, color: '#09090b', letterSpacing: '-0.025em' }}>
+            Guest Directory
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
-            Unified guest records shared across front-desk walk-ins and portal user accounts
+          <p style={{ color: '#71717a', fontSize: '0.84rem', marginTop: '2px' }}>
+            Unified guest records, identification documents, and historic stay records
           </p>
         </div>
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', marginBottom: '20px', border: '1px solid #e2e8f0', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
-          <div style={{ position: 'relative', minWidth: '240px', flex: 1 }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+      <div className="glass-panel" style={{ padding: '12px 14px', marginBottom: '16px', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, alignItems: 'center' }}>
+          <div style={{ position: 'relative', minWidth: '220px', flex: 1 }}>
+            <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
             <input
               type="text"
-              className="input-field"
-              style={{ paddingLeft: '38px', height: '40px', fontSize: '0.85rem' }}
-              placeholder="Search by Name, Email, Phone, or ID Number..."
+              style={{ width: '100%', paddingLeft: '32px', height: '36px', fontSize: '0.82rem', background: '#fafafa', border: '1px solid #e4e4e7', borderRadius: '6px' }}
+              placeholder="Search name, email, phone, ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
           <select
-            className="input-field"
-            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 10px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px', color: '#09090b' }}
             value={idTypeFilter}
             onChange={(e) => setIdTypeFilter(e.target.value)}
           >
@@ -125,8 +124,7 @@ export default function GuestManagement() {
           </select>
 
           <select
-            className="input-field"
-            style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 12px' }}
+            style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 10px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px', color: '#09090b' }}
             value={accountTypeFilter}
             onChange={(e) => setAccountTypeFilter(e.target.value)}
           >
@@ -136,22 +134,20 @@ export default function GuestManagement() {
           </select>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>From:</span>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>From:</span>
             <input
               type="date"
-              className="input-field"
-              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 8px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px' }}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>To:</span>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>To:</span>
             <input
               type="date"
-              className="input-field"
-              style={{ width: 'auto', height: '40px', fontSize: '0.85rem', padding: '0 10px' }}
+              style={{ width: 'auto', height: '36px', fontSize: '0.82rem', padding: '0 8px', background: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '6px' }}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
@@ -166,7 +162,8 @@ export default function GuestManagement() {
                 setStartDate('');
                 setEndDate('');
               }}
-              style={{ fontSize: '0.8rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, padding: '0 6px' }}
+              className="btn btn-secondary"
+              style={{ height: '36px', padding: '0 10px', fontSize: '0.78rem', color: '#71717a' }}
             >
               Reset Filters
             </button>
@@ -176,72 +173,69 @@ export default function GuestManagement() {
         <button
           onClick={handleExportExcel}
           className="btn btn-secondary"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '40px', padding: '0 16px', background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0', fontWeight: 700 }}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px', padding: '0 12px', fontSize: '0.8rem' }}
         >
-          <FileSpreadsheet size={18} /> Export Excel ({filteredGuests.length})
+          <FileSpreadsheet size={15} /> Export Excel ({filteredGuests.length})
         </button>
       </div>
 
-      <div className="glass-panel" style={{ padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
-        <div className="table-responsive">
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ borderBottom: '2px solid #f1f5f9', color: '#64748b', fontSize: '0.85rem' }}>
-                <th style={{ padding: '12px' }}>GUEST NAME</th>
-                <th style={{ padding: '12px' }}>CONTACT DETAILS</th>
-                <th style={{ padding: '12px' }}>ID VERIFICATION</th>
-                <th style={{ padding: '12px' }}>ACCOUNT TYPE</th>
-                <th style={{ padding: '12px' }}>ACTIONS</th>
+      <div className="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Guest Name</th>
+              <th>Contact Details</th>
+              <th>ID Verification</th>
+              <th>Account Type</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredGuests.length === 0 ? (
+              <tr>
+                <td colSpan={5} style={{ textAlign: 'center', padding: '36px', color: '#a1a1aa' }}>
+                  No guests found matching selected filters.
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredGuests.length === 0 ? (
-                <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                    No guests found matching selected filters.
+            ) : (
+              filteredGuests.map(g => (
+                <tr key={g._id}>
+                  <td style={{ fontWeight: 600, color: '#09090b' }}>
+                    {g.name}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#09090b', fontSize: '0.84rem' }}>
+                      <Mail size={13} style={{ color: '#71717a' }} /> {g.email}
+                    </div>
+                    {g.phone && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#71717a', fontSize: '0.78rem', marginTop: '2px' }}>
+                        <Phone size={13} style={{ color: '#a1a1aa' }} /> {g.phone}
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <div style={{ fontWeight: 500, color: '#09090b' }}>{g.idType || 'Passport'}</div>
+                    <div className="font-mono" style={{ fontSize: '0.78rem', color: '#71717a' }}>{g.idNumber || 'N/A'}</div>
+                  </td>
+                  <td>
+                    <span className="status-pill" style={{
+                      background: g.user ? '#f0fdf4' : '#f4f4f5',
+                      color: g.user ? '#166534' : '#52525b'
+                    }}>
+                      <span className="status-dot" style={{ background: g.user ? '#16a34a' : '#71717a' }} />
+                      {g.user ? 'Portal Account' : 'Front-Desk Only'}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <button className="btn btn-secondary" onClick={() => viewHistory(g)} style={{ fontSize: '0.74rem', padding: '4px 9px' }}>
+                      <History size={12} style={{ marginRight: '4px' }} /> Stays
+                    </button>
                   </td>
                 </tr>
-              ) : (
-                filteredGuests.map(g => (
-                  <tr key={g._id} style={{ borderBottom: '1px solid #e2e8f0', fontSize: '0.9rem' }}>
-                    <td style={{ padding: '14px 12px', fontWeight: '700', color: '#0f172a' }}>
-                      {g.name}
-                    </td>
-                    <td style={{ padding: '14px 12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#334155' }}>
-                        <Mail size={14} /> {g.email}
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px' }}>
-                        <Phone size={14} /> {g.phone}
-                      </div>
-                    </td>
-                    <td style={{ padding: '14px 12px' }}>
-                      <div style={{ fontWeight: '600', color: '#0f172a' }}>{g.idType || 'Passport'}</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{g.idNumber || 'N/A'}</div>
-                    </td>
-                    <td style={{ padding: '14px 12px' }}>
-                      <span style={{
-                        padding: '4px 10px',
-                        borderRadius: '12px',
-                        fontSize: '0.75rem',
-                        fontWeight: '700',
-                        background: g.user ? 'rgba(147, 51, 234, 0.1)' : '#f1f5f9',
-                        color: g.user ? '#9333ea' : '#475569'
-                      }}>
-                        {g.user ? 'Portal Account' : 'Front-Desk Record'}
-                      </span>
-                    </td>
-                    <td style={{ padding: '14px 12px' }}>
-                      <button className="btn btn-secondary" onClick={() => viewHistory(g)} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
-                        <History size={14} /> Stay History
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* Stay History Modal */}

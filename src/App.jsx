@@ -16,7 +16,7 @@ import BillingManagement from './pages/admin/BillingManagement';
 import HousekeepingPage from './pages/admin/HousekeepingPage';
 import ReportsPage from './pages/admin/ReportsPage';
 import StaffManagement from './pages/admin/StaffManagement';
-import { Menu, Building2 } from 'lucide-react';
+import { Menu, Building2, PanelLeftClose, PanelLeftOpen, Clock } from 'lucide-react';
 
 // Protected Route Wrapper with Permission Validation
 function ProtectedRoute({ children, module, action = 'view' }) {
@@ -72,6 +72,66 @@ function AppLayout() {
   const location = useLocation();
   const { user } = useAuth();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('carehaven_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem('carehaven_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  // Global Keyboard Shortcut: Ctrl+B or Cmd+B to toggle sidebar menu
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebarCollapse();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Live Hospitality PMS Clock
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentDateTime(new Date()), 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedDate = currentDateTime.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric'
+  });
+  const formattedTime = currentDateTime.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  const getPageTitle = (pathname) => {
+    if (pathname === '/admin' || pathname === '/admin/') return 'System Overview';
+    if (pathname.startsWith('/admin/bookings')) return 'Bookings';
+    if (pathname.startsWith('/admin/rooms')) return 'Rooms & Inventory';
+    if (pathname.startsWith('/admin/guests')) return 'Guest Directory';
+    if (pathname.startsWith('/admin/billing')) return 'Billing & Invoicing';
+    if (pathname.startsWith('/admin/housekeeping')) return 'Housekeeping';
+    if (pathname.startsWith('/admin/reports')) return 'Reports & Analytics';
+    if (pathname.startsWith('/admin/staff')) return 'Staff & Roles';
+    if (pathname.startsWith('/guest-dashboard')) return 'My Reservations';
+    return 'Operations';
+  };
 
   const isLoginPage = location.pathname === '/login';
   const showSidebar = !isLoginPage && (!!user || location.pathname.startsWith('/admin'));
@@ -177,7 +237,7 @@ function AppLayout() {
           display: 'none',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '12px 16px',
+          padding: '10px 16px',
           background: '#ffffff',
           borderBottom: '1px solid #e2e8f0',
           position: 'sticky',
@@ -186,48 +246,152 @@ function AppLayout() {
         }}>
           <button 
             onClick={() => setMobileSidebarOpen(true)}
-            className="btn btn-secondary"
-            style={{ padding: '8px', border: 'none', background: 'transparent' }}
+            style={{ padding: '6px', border: '1px solid #e2e8f0', borderRadius: '6px', background: '#ffffff', cursor: 'pointer', color: '#0f172a', display: 'flex', alignItems: 'center' }}
+            aria-label="Open Navigation"
           >
-            <Menu size={24} />
+            <Menu size={20} />
           </button>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--accent-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-              <Building2 size={18} />
+            <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'linear-gradient(135deg, #0b5e39 0%, #15803d 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <Building2 size={15} />
             </div>
-            <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#0f172a' }}>
-              Care<span className="text-gradient">Haven</span>
+            <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a', letterSpacing: '-0.02em' }}>
+              Care<span style={{ color: '#0b5e39' }}>Haven</span>
             </span>
           </div>
 
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-primary)', background: 'rgba(5, 150, 105, 0.1)', padding: '4px 10px', borderRadius: '20px' }}>
+          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#0b5e39', background: '#eaf6f0', padding: '3px 9px', borderRadius: '6px', border: '1px solid rgba(11, 94, 57, 0.2)' }}>
             {user?.role || 'Staff'}
           </div>
         </header>
 
         <div style={{ flex: 1, display: 'flex' }}>
-          <Sidebar isOpen={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
+          <Sidebar 
+            isOpen={mobileSidebarOpen} 
+            onClose={() => setMobileSidebarOpen(false)} 
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={toggleSidebarCollapse}
+          />
           
-          <main className="main-content-area" style={{ 
+          <div className="main-content-area" style={{ 
             flex: 1, 
             minHeight: '100vh',
-            transition: 'all 0.3s ease'
+            display: 'flex',
+            flexDirection: 'column',
+            transition: 'margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>
-            {routes}
-          </main>
+            {/* Desktop Top Administrative Bar */}
+            <header className="desktop-admin-topbar" style={{
+              height: '52px',
+              background: '#ffffff',
+              borderBottom: '1px solid #e2e8f0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0 24px',
+              position: 'sticky',
+              top: 0,
+              zIndex: 90,
+              boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
+            }}>
+              {/* Left: Collapse Toggle + Breadcrumb */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <button
+                  onClick={toggleSidebarCollapse}
+                  className="btn btn-secondary"
+                  title={isSidebarCollapsed ? "Expand sidebar menu (Ctrl+B)" : "Collapse sidebar menu (Ctrl+B)"}
+                  style={{
+                    padding: '6px 11px',
+                    fontSize: '0.78rem',
+                    gap: '6px',
+                    color: '#475569',
+                    borderRadius: '6px',
+                    height: '32px'
+                  }}
+                >
+                  {isSidebarCollapsed ? <PanelLeftOpen size={15} style={{ color: '#0b5e39' }} /> : <PanelLeftClose size={15} />}
+                  <span>{isSidebarCollapsed ? 'Open Menu' : 'Close Menu'}</span>
+                </button>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: '#64748b' }}>
+                  <span style={{ color: '#0b5e39', fontWeight: 600 }}>CareHaven</span>
+                  <span style={{ color: '#cbd5e1' }}>/</span>
+                  <span style={{ color: '#0f172a', fontWeight: 600 }}>
+                    {getPageTitle(location.pathname)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right: Hospitality Clock, System Status, User Avatar */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div className="font-mono tabular-nums" style={{ fontSize: '0.78rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Clock size={14} style={{ color: '#c89535' }} />
+                  <span>{formattedDate} • {formattedTime}</span>
+                </div>
+
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 9px',
+                  borderRadius: '6px',
+                  background: '#eaf6f0',
+                  border: '1px solid rgba(11, 94, 57, 0.18)',
+                  color: '#0b5e39',
+                  fontSize: '0.72rem',
+                  fontWeight: 600
+                }}>
+                  <span className="animate-pulse" style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                  PMS Online
+                </div>
+
+                {user && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingLeft: '8px', borderLeft: '1px solid #e2e8f0' }}>
+                    <div style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #0b5e39 0%, #15803d 100%)',
+                      color: '#ffffff',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#0f172a' }}>
+                      {user.name}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </header>
+
+            <main style={{ flex: 1 }}>
+              {routes}
+            </main>
+          </div>
         </div>
 
         <style>{`
           @media (min-width: 1025px) {
             .main-content-area {
-              margin-left: 260px;
-              width: calc(100% - 260px);
+              margin-left: ${isSidebarCollapsed ? '72px' : '260px'};
+              width: calc(100% - ${isSidebarCollapsed ? '72px' : '260px'});
+            }
+            .desktop-admin-topbar {
+              display: flex !important;
             }
           }
           @media (max-width: 1024px) {
             .mobile-admin-header {
               display: flex !important;
+            }
+            .desktop-admin-topbar {
+              display: none !important;
             }
             .main-content-area {
               margin-left: 0 !important;

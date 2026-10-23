@@ -33,7 +33,7 @@ export default function LoginPage() {
         }
       }
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please check credentials.');
+      setError(err.message || 'Authentication failed. Please verify your credentials.');
     } finally {
       setLoading(false);
     }
@@ -48,91 +48,91 @@ export default function LoginPage() {
       minHeight: 'calc(100vh - 120px)',
       padding: '40px 20px',
       margin: '0 auto',
-      background: '#ffffff'
+      background: 'var(--bg-dark)'
     }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '480px', padding: '40px', margin: '0 auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)' }}>
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '36px', margin: '0 auto', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{
-            width: '48px',
-            height: '48px',
+            width: '44px',
+            height: '44px',
             borderRadius: '12px',
-            background: 'var(--accent-gradient)',
+            background: 'linear-gradient(135deg, #0b5e39 0%, #15803d 100%)',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#fff',
+            color: '#ffffff',
             marginBottom: '12px',
-            boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)'
+            boxShadow: '0 4px 14px rgba(11, 94, 57, 0.25)'
           }}>
-            <Building2 size={24} />
+            <Building2 size={22} strokeWidth={2.2} />
           </div>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a' }}>
-            {isRegister ? 'Create Guest Account' : 'Welcome Back'}
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
+            {isRegister ? 'Create Guest Account' : 'Staff & Guest Sign In'}
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>
-            {isRegister ? 'Sign up to manage online room bookings' : 'Sign in to access your dashboard'}
+          <p style={{ color: '#64748b', fontSize: '0.84rem', marginTop: '4px' }}>
+            {isRegister ? 'Register your account to manage stays online' : 'CareHaven Luxury Resort & Suites PMS'}
           </p>
         </div>
 
         {error && (
           <div style={{
-            padding: '12px 16px',
-            borderRadius: 'var(--radius-sm)',
-            background: 'rgba(225, 29, 72, 0.1)',
-            border: '1px solid rgba(225, 29, 72, 0.3)',
-            color: '#e11d48',
-            fontSize: '0.85rem',
-            marginBottom: '20px',
-            fontWeight: '500'
+            padding: '10px 12px',
+            borderRadius: '6px',
+            background: '#fef2f2',
+            border: '1px solid #fecaca',
+            color: '#991b1b',
+            fontSize: '0.82rem',
+            marginBottom: '18px',
+            lineHeight: 1.4
           }}>
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {isRegister && (
             <>
               <div>
-                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Full Name</label>
+                <label style={{ fontSize: '0.8rem', color: '#52525b', marginBottom: '5px', display: 'block', fontWeight: 500 }}>Full Name</label>
                 <div style={{ position: 'relative' }}>
-                  <User size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <User size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="John Doe"
+                    placeholder="Jane Doe"
                     style={{
                       width: '100%',
-                      padding: '12px 14px 12px 42px',
+                      padding: '9px 12px 9px 36px',
                       background: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: 'var(--radius-sm)',
-                      color: '#0f172a',
-                      fontSize: '0.95rem'
+                      border: '1px solid #e4e4e7',
+                      borderRadius: '6px',
+                      color: '#09090b',
+                      fontSize: '0.88rem'
                     }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Phone Number</label>
+                <label style={{ fontSize: '0.8rem', color: '#52525b', marginBottom: '5px', display: 'block', fontWeight: 500 }}>Phone Number</label>
                 <div style={{ position: 'relative' }}>
-                  <Phone size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <Phone size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
                   <input
                     type="text"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+1 555-0192"
+                    placeholder="+92 300 1234567"
                     style={{
                       width: '100%',
-                      padding: '12px 14px 12px 42px',
+                      padding: '9px 12px 9px 36px',
                       background: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: 'var(--radius-sm)',
-                      color: '#0f172a',
-                      fontSize: '0.95rem'
+                      border: '1px solid #e4e4e7',
+                      borderRadius: '6px',
+                      color: '#09090b',
+                      fontSize: '0.88rem'
                     }}
                   />
                 </div>
@@ -141,32 +141,32 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Email Address</label>
+            <label style={{ fontSize: '0.8rem', color: '#52525b', marginBottom: '5px', display: 'block', fontWeight: 500 }}>Email Address</label>
             <div style={{ position: 'relative' }}>
-              <Mail size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <Mail size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="user@hms.com"
+                placeholder="staff@carehaven.com"
                 style={{
                   width: '100%',
-                  padding: '12px 14px 12px 42px',
+                  padding: '9px 12px 9px 36px',
                   background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  borderRadius: 'var(--radius-sm)',
-                  color: '#0f172a',
-                  fontSize: '0.95rem'
+                  border: '1px solid #e4e4e7',
+                  borderRadius: '6px',
+                  color: '#09090b',
+                  fontSize: '0.88rem'
                 }}
               />
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', fontWeight: '600' }}>Password</label>
+            <label style={{ fontSize: '0.8rem', color: '#52525b', marginBottom: '5px', display: 'block', fontWeight: 500 }}>Password</label>
             <div style={{ position: 'relative' }}>
-              <KeyRound size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <KeyRound size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#a1a1aa' }} />
               <input
                 type="password"
                 required
@@ -175,29 +175,29 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 style={{
                   width: '100%',
-                  padding: '12px 14px 12px 42px',
+                  padding: '9px 12px 9px 36px',
                   background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  borderRadius: 'var(--radius-sm)',
-                  color: '#0f172a',
-                  fontSize: '0.95rem'
+                  border: '1px solid #e4e4e7',
+                  borderRadius: '6px',
+                  color: '#09090b',
+                  fontSize: '0.88rem'
                 }}
               />
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '12px', marginTop: '10px' }}>
-            {loading ? 'Authenticating...' : isRegister ? 'Register & Continue' : 'Sign In'} <ArrowRight size={16} />
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '10px', marginTop: '6px' }}>
+            {loading ? 'Authenticating...' : isRegister ? 'Create Account' : 'Sign In'} <ArrowRight size={15} />
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
+        <div style={{ textAlign: 'center', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f4f4f5' }}>
           <button
             type="button"
             onClick={() => setIsRegister(!isRegister)}
-            style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer', fontSize: '0.9rem', fontWeight: '600' }}
+            style={{ background: 'none', border: 'none', color: '#52525b', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500 }}
           >
-            {isRegister ? 'Already have an account? Sign In' : 'Need a guest portal account? Sign Up'}
+            {isRegister ? 'Already registered? Sign in' : 'Need a guest portal account? Sign up'}
           </button>
         </div>
       </div>
