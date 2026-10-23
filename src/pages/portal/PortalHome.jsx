@@ -366,21 +366,28 @@ export default function PortalHome() {
           </div>
         ) : (
           <div className="ch-rooms-grid">
-            {curatedShowcaseRooms.map((room, index) => {
-              const photo = '/executive_king_deluxe.jpg';
-              const price = 1890;
-              const title = 'Executive King Deluxe';
-              const desc = 'Spacious double suite featuring king size bed, custom marble bathroom, executive desk, and rainfall shower.';
+            {displayedRooms.map((room, index) => {
+              // Pick photo: prefer Cloudinary URL from DB, fallback to local static by room type name
+              const typeName = room.roomType?.name || '';
+              const fallbackPhoto = typeName.toLowerCase().includes('boutique') 
+                ? '/boutique_single.png' 
+                : typeName.toLowerCase().includes('presidential') || typeName.toLowerCase().includes('ocean')
+                  ? '/luxury_suite.png'
+                  : '/executive_king_deluxe.jpg';
+              const dbPhoto = room.roomType?.photos?.[0];
+              const photo = (dbPhoto && dbPhoto.startsWith('http')) ? dbPhoto : fallbackPhoto;
+              const price = room.roomType?.basePrice || 1890;
+              const title = room.roomType?.name || 'Executive King Deluxe';
+              const desc = room.roomType?.description || 'Spacious double suite featuring king size bed, custom marble bathroom, executive desk, and rainfall shower.';
 
               return (
                 <div key={room._id || index} className="ch-room-card">
                   {/* Card Image */}
                   <div className="ch-room-image-wrapper">
-                    <img 
-                      src={photo} 
-                      alt={title} 
-                      className="ch-room-img"
-                    />
+                    <picture>
+                      <source srcSet={photo.replace(/\.(jpg|png)$/i, '.webp')} type="image/webp" />
+                      <img src={photo} alt={title} className="ch-room-img" loading="lazy" />
+                    </picture>
                   </div>
 
                   {/* Card Body */}
@@ -506,7 +513,10 @@ export default function PortalHome() {
               className="ch-gallery-card"
               onClick={() => setLightboxImage(item)}
             >
-              <img src={item.img} alt={item.title} className="ch-gallery-img" />
+              <picture>
+        <source srcSet={item.img.replace(/\.(jpg|png)$/i, '.webp')} type="image/webp" />
+        <img src={item.img} alt={item.title} className="ch-gallery-img" loading="lazy" />
+      </picture>
               <div className="ch-gallery-overlay">
                 <h4 className="ch-gallery-title">{item.title}</h4>
                 <span className="ch-gallery-sub">{item.subtitle}</span>
